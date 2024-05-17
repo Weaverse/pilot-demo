@@ -1,18 +1,42 @@
 import type {
   HydrogenComponentProps,
   HydrogenComponentSchema,
-} from '@weaverse/hydrogen';
-import type {CSSProperties} from 'react';
-import {useState, useEffect, forwardRef} from 'react';
+} from "@weaverse/hydrogen";
+import type { CSSProperties } from "react";
+import { useState, useEffect, forwardRef } from "react";
 
 interface CountDownTimerProps extends HydrogenComponentProps {
   textColor: string;
   startDate: number;
 }
+function calculateTimeRemaining(startTime: number) {
+  let now = new Date().getTime();
+  let difference = startTime - now;
+  if (difference <= 0) {
+    return {
+      days: 0,
+      hours: 0,
+      minutes: 0,
+      seconds: 0,
+    };
+  }
 
+  let days = Math.floor(difference / (1000 * 60 * 60 * 24));
+  let hours = Math.floor(
+    (difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+  );
+  let minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+  let seconds = Math.floor((difference % (1000 * 60)) / 1000);
+  return {
+    days,
+    hours,
+    minutes,
+    seconds,
+  };
+}
 let CountdownTimer = forwardRef<HTMLDivElement, CountDownTimerProps>(
   (props, ref) => {
-    let {textColor, startDate, ...rest} = props;
+    let { textColor, startDate, ...rest } = props;
     const [timeRemaining, setTimeRemaining] = useState(
       calculateTimeRemaining(startDate),
     );
@@ -32,34 +56,8 @@ let CountdownTimer = forwardRef<HTMLDivElement, CountDownTimerProps>(
       return () => clearInterval(intervalId);
     }, [startDate]);
 
-    function calculateTimeRemaining(startTime: number) {
-      let now = new Date().getTime();
-      let difference = startTime - now;
-      if (difference <= 0) {
-        return {
-          days: 0,
-          hours: 0,
-          minutes: 0,
-          seconds: 0,
-        };
-      }
-
-      let days = Math.floor(difference / (1000 * 60 * 60 * 24));
-      let hours = Math.floor(
-        (difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
-      );
-      let minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-      let seconds = Math.floor((difference % (1000 * 60)) / 1000);
-      return {
-        days,
-        hours,
-        minutes,
-        seconds,
-      };
-    }
-
     let timerStyle: CSSProperties = {
-      '--timer-text-color': textColor,
+      "--timer-text-color": textColor,
     } as CSSProperties;
 
     return (
@@ -103,25 +101,27 @@ let CountdownTimer = forwardRef<HTMLDivElement, CountDownTimerProps>(
 
 export default CountdownTimer;
 
+let tomorrow = new Date();
+tomorrow.setDate(tomorrow.getDate() + 1);
 export let schema: HydrogenComponentSchema = {
-  type: 'countdown--timer',
-  title: 'Timer',
-  toolbar: ['general-settings', ['duplicate', 'delete']],
+  type: "countdown--timer",
+  title: "Timer",
+  toolbar: ["general-settings", ["duplicate", "delete"]],
   inspector: [
     {
-      group: 'Timer',
+      group: "Timer",
       inputs: [
         {
-          type: 'color',
-          name: 'textColor',
-          label: 'Color',
-          defaultValue: '#000000',
+          type: "color",
+          name: "textColor",
+          label: "Color",
+          defaultValue: "#000000",
         },
         {
-          type: 'datepicker',
-          label: 'Start date',
-          name: 'startDate',
-          defaultValue: '2024-01-01',
+          type: "datepicker",
+          label: "Start date",
+          name: "startDate",
+          defaultValue: tomorrow.getTime(),
         },
       ],
     },
