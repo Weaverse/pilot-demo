@@ -50,10 +50,6 @@ export let loader = async ({ weaverse }: ComponentLoaderArgs) => {
 export let schema: HydrogenComponentSchema = {
   type: "featured-products",
   title: "Featured products",
-  limit: 1,
-  enabledOn: {
-    pages: ["INDEX"],
-  },
   inspector: [
     {
       group: "Featured products",
@@ -79,5 +75,4 @@ export let schema: HydrogenComponentSchema = {
       ],
     },
   ],
-  toolbar: ["general-settings", ["duplicate", "delete"]],
 };
