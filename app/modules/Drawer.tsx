@@ -51,11 +51,7 @@ export function Drawer({
 
   return (
     <Transition appear show={open} as={Fragment}>
-      <Dialog
-        as="div"
-        className={clsx("relative", openFrom === "top" ? "z-10" : "z-50")}
-        onClose={onClose}
-      >
+      <Dialog as="div" className="relative z-50" onClose={onClose}>
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -69,13 +65,13 @@ export function Drawer({
         </Transition.Child>
 
         <div className="fixed inset-0 top-nav">
-          <div className="absolute inset-0 top-nav overflow-hidden">
+          <div className="absolute inset-0 overflow-hidden">
             <div
               className={`fixed inset-y-0 flex ${
                 openFrom === "right"
                   ? "right-0 max-w-full"
                   : openFrom === "top"
-                    ? "top-nav overflow-hidden w-screen"
+                    ? "top-full-nav overflow-hidden w-screen"
                     : ""
               }`}
             >
@@ -90,7 +86,7 @@ export function Drawer({
               >
                 <DialogPanel
                   className={cn(
-                    "text-left align-middle transition-all transform shadow-xl  bg-background",
+                    "text-left align-middle transition-transform transform shadow-xl bg-background",
                     openFrom === "top"
                       ? "h-fit w-screen"
                       : "max-w-lg h-screen-dynamic",
