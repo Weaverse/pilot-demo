@@ -12,37 +12,43 @@ export default {
     },
     extend: {
       keyframes: {
-        fadeIn: {
+        "fade-in": {
           from: { opacity: "0" },
           to: { opacity: "1" },
         },
-        slideDownAndFade: {
+        "slide-down-and-fade": {
           from: { opacity: "0", transform: "translateY(-6px)" },
           to: { opacity: "1", transform: "translateY(0)" },
         },
-        slideLeftAndFade: {
+        "slide-left-and-fade": {
           from: { opacity: "0", transform: "translateX(6px)" },
           to: { opacity: "1", transform: "translateX(0)" },
         },
-        slideUpAndFade: {
+        "slide-up-and-fade": {
           from: { opacity: "0", transform: "translateY(6px)" },
           to: { opacity: "1", transform: "translateY(0)" },
         },
-        slideRightAndFade: {
+        "slide-right-and-fade": {
           from: { opacity: "0", transform: "translateX(-6px)" },
           to: { opacity: "1", transform: "translateX(0)" },
         },
+        marquee: {
+          from: { transform: "translateX(0)" },
+          to: { transform: "translateX(-100%)" },
+        },
       },
       animation: {
-        fadeIn: "fadeIn 500ms ease-in forwards",
-        slideDownAndFade:
-          "slideDownAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1) forwards",
-        slideLeftAndFade:
-          "slideLeftAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)",
-        slideUpAndFade: "slideUpAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)",
-        slideRightAndFade:
-          "slideRightAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)",
         spin: "spin .5s linear infinite",
+        marquee: "marquee var(--animation-speed, 150ms) linear infinite",
+        "fade-in": "fade-in 500ms ease-in forwards",
+        "slide-down-and-fade":
+          "slide-down-and-fade 400ms cubic-bezier(0.16, 1, 0.3, 1) forwards",
+        "slide-left-and-fade":
+          "slide-left-and-fade 400ms cubic-bezier(0.16, 1, 0.3, 1) forwards",
+        "slide-up-and-fade":
+          "slide-up-and-fade 400ms cubic-bezier(0.16, 1, 0.3, 1) forwards",
+        "slide-right-and-fade":
+          "slide-right-and-fade 400ms cubic-bezier(0.16, 1, 0.3, 1) forwards",
       },
       borderWidth: {
         6: "6px",
@@ -71,7 +77,6 @@ export default {
       },
       spacing: {
         nav: "var(--height-nav)",
-        "full-nav": "var(--announcement-bar-height, 0px)",
         screen: "var(--screen-height, 100vh)",
       },
       height: {
@@ -118,7 +123,7 @@ export default {
       },
       boxShadow: {
         border: "inset 0px 0px 0px 1px rgb(var(--color-border) / 0.08)",
-        header: "0 4px 18px rgba(0,0,0,.1)",
+        header: "0 2px 5px #0000000f",
       },
       zIndex: {
         1: "1",

@@ -1,33 +1,33 @@
 import { useLoaderData, useSearchParams } from "@remix-run/react";
 import { Money, ShopPayButton, useOptimisticVariant } from "@shopify/hydrogen";
-import type {
-  HydrogenComponentProps,
-  HydrogenComponentSchema,
-} from "@weaverse/hydrogen";
+import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";
+import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
 import { forwardRef, useEffect, useState } from "react";
-import { getExcerpt } from "~/lib/utils";
-import { AddToCartButton, Text } from "~/modules";
-import { ProductPlaceholder } from "~/modules/product-form/placeholder";
-import { ProductMedia } from "~/modules/product-form/product-media";
+import { CompareAtPrice } from "~/components/CompareAtPrice";
+import { Section, type SectionProps, layoutInputs } from "~/components/Section";
+import { getExcerpt, isDiscounted, isNewArrival } from "~/lib/utils";
+import { AddToCartButton, Link } from "~/modules";
+import {
+  ProductMedia,
+  type ProductMediaProps,
+} from "~/modules/product-form/product-media";
 import { Quantity } from "~/modules/product-form/quantity";
 import { ProductVariants } from "~/modules/product-form/variants";
 import type { loader as productLoader } from "~/routes/($locale).products.$productHandle";
 import { ProductDetail } from "./product-detail";
 
-interface ProductInformationProps extends HydrogenComponentProps {
+interface ProductInformationProps
+  extends SectionProps,
+    Omit<ProductMediaProps, "selectedVariant" | "media"> {
   addToCartText: string;
   soldOutText: string;
   unavailableText: string;
   showVendor: boolean;
   showSalePrice: boolean;
-  showDetails: boolean;
+  showShortDescription: boolean;
   showShippingPolicy: boolean;
   showRefundPolicy: boolean;
   hideUnavailableOptions: boolean;
-  showThumbnails: boolean;
-  numberOfThumbnails: number;
-  spacing: number;
-  gallerySize?: never;
 }
 
 let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
@@ -39,7 +39,6 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
       storeDomain,
     } = useLoaderData<typeof productLoader>();
     let variants = _variants?.product?.variants;
-
     let selectedVariantOptimistic = useOptimisticVariant(
       product?.selectedVariant || variants?.nodes?.[0],
       variants,
@@ -54,15 +53,15 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
       unavailableText,
       showVendor,
       showSalePrice,
-      showDetails,
+      showShortDescription,
       showShippingPolicy,
       showRefundPolicy,
       hideUnavailableOptions,
+      mediaLayout,
+      gridSize,
+      imageAspectRatio,
       showThumbnails,
-      numberOfThumbnails,
-      spacing,
       children,
-      gallerySize,
       ...rest
     } = props;
     let [quantity, setQuantity] = useState<number>(1);
@@ -101,53 +100,89 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
     }
 
     if (product && variants) {
-      let { title, vendor, descriptionHtml } = product;
+      let { title, vendor, summary, description } = product;
       let { shippingPolicy, refundPolicy } = shop;
+      let discountedAmount =
+        (selectedVariant?.compareAtPrice?.amount || 0) /
+          selectedVariant?.price?.amount -
+        1;
+      let isNew = isNewArrival(product.publishedAt);
+
       return (
-        <section ref={ref} {...rest}>
-          <div className="container p-6 md:p-8 lg:p-12  lg:px-12 px-4 md:px-6 mx-auto">
-            <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-2 lg:gap-12">
-              <ProductMedia
-                media={product?.media.nodes}
-                selectedVariant={selectedVariant}
-                showThumbnails={showThumbnails}
-                numberOfThumbnails={numberOfThumbnails}
-                spacing={spacing}
-              />
+        <Section ref={ref} {...rest} overflow="unset">
+          <div className="flex items-center gap-2">
+            <Link
+              to="/"
+              className="text-body/50 hover:underline underline-offset-4"
+            >
+              Home
+            </Link>
+            <span>/</span>
+            <span>{product.title}</span>
+          </div>
+          <div className="space-y-5 lg:space-y-0 lg:grid lg:gap-[clamp(30px,5%,60px)] lg:grid-cols-[1fr_clamp(360px,45%,480px)]">
+            <ProductMedia
+              mediaLayout={mediaLayout}
+              gridSize={gridSize}
+              imageAspectRatio={imageAspectRatio}
+              media={product?.media.nodes}
+              selectedVariant={selectedVariant}
+              showThumbnails={showThumbnails}
+            />
+            <div
+              style={
+                {
+                  "--shop-pay-button-border-radius": "0",
+                } as React.CSSProperties
+              }
+            >
               <div
-                className="flex flex-col justify-start space-y-5"
-                style={
-                  {
-                    "--shop-pay-button-border-radius": "0",
-                  } as React.CSSProperties
-                }
+                className="sticky flex flex-col justify-start space-y-5"
+                style={{ top: "calc(var(--height-nav) + 20px)" }}
               >
                 <div className="space-y-4">
-                  <div className="flex flex-col gap-2">
-                    <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">
-                      {title}
-                    </h2>
-                    {showVendor && vendor && (
-                      <Text className={"opacity-50 font-medium"}>{vendor}</Text>
+                  <div className="flex items-center gap-2 text-sm">
+                    {discountedAmount > 0 && discountedAmount < 1 && (
+                      <span className="py-1.5 px-2 text-background bg-[var(--color-sale-tag)] rounded">
+                        -{Math.round(discountedAmount * 100)}%
+                      </span>
+                    )}
+                    {isNew && (
+                      <span className="py-1.5 px-2 text-background bg-[var(--color-new-tag)] rounded">
+                        NEW ARRIVAL
+                      </span>
                     )}
                   </div>
-                  <p className="text-2xl md:text-3xl/relaxed lg:text-2xl/relaxed xl:text-3xl/relaxed">
-                    {selectedVariant ? (
+                  <div className="flex flex-col gap-2">
+                    {showVendor && vendor && (
+                      <span className="text-body/50">{vendor}</span>
+                    )}
+                    <h1 className="h3 !tracking-tight">{title}</h1>
+                  </div>
+                  {selectedVariant ? (
+                    <div className="flex items-center gap-2">
                       <Money
                         withoutTrailingZeros
                         data={selectedVariant.price}
                         as="span"
+                        className="font-medium text-2xl/none"
                       />
-                    ) : null}
-                  </p>
+                      {isDiscounted(
+                        selectedVariant.price as MoneyV2,
+                        selectedVariant.compareAtPrice as MoneyV2,
+                      ) &&
+                        showSalePrice && (
+                          <CompareAtPrice
+                            data={selectedVariant.compareAtPrice as MoneyV2}
+                            className="text-2xl/none"
+                          />
+                        )}
+                    </div>
+                  ) : null}
                   {children}
-                  <p
-                    suppressHydrationWarning
-                    className="max-w-[600px] leading-relaxed prose"
-                    dangerouslySetInnerHTML={{
-                      __html: descriptionHtml,
-                    }}
-                  />
+                  {showShortDescription && (
+                    <p className="leading-relaxed">{summary}</p>
+                  )}
                   <ProductVariants
                     product={product}
                     selectedVariant={selectedVariant}
@@ -187,6 +222,7 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
                   />
                 )}
                 <div className="grid py-4">
+                  <ProductDetail title="Description" content={description} />
                   {showShippingPolicy && shippingPolicy?.body && (
                     <ProductDetail
                       title="Shipping"
@@ -205,7 +241,7 @@ let ProductInformation = forwardRef<HTMLDivElement, ProductInformationProps>(
               </div>
             </div>
           </div>
-        </section>
+        </Section>
       );
     }
     return <div ref={ref} {...rest} />;
@@ -216,15 +252,77 @@ export default ProductInformation;
 
 export let schema: HydrogenComponentSchema = {
   type: "product-information",
-  title: "Product information",
+  title: "Main product",
   childTypes: ["judgeme"],
   limit: 1,
   enabledOn: {
     pages: ["PRODUCT"],
   },
   inspector: [
+    { group: "Layout", inputs: layoutInputs },
     {
-      group: "Product form",
+      group: "Product Media",
+      inputs: [
+        {
+          type: "toggle-group",
+          name: "mediaLayout",
+          label: "Media layout",
+          configs: {
+            options: [
+              {
+                label: "Grid",
+                value: "grid",
+                icon: "grid-2x2",
+              },
+              {
+                label: "Slider",
+                value: "slider",
+                icon: "slideshow-outline",
+              },
+            ],
+          },
+          defaultValue: "grid",
+        },
+        {
+          type: "select",
+          name: "gridSize",
+          label: "Grid size",
+          defaultValue: "2x2",
+          configs: {
+            options: [
+              { label: "1x1", value: "1x1" },
+              { label: "2x2", value: "2x2" },
+              { label: "Mix", value: "mix" },
+            ],
+          },
+          condition: "mediaLayout.eq.grid",
+        },
+        {
+          label: "Show thumbnails",
+          name: "showThumbnails",
+          type: "switch",
+          defaultValue: true,
+          condition: "mediaLayout.eq.slider",
+        },
+        {
+          type: "select",
+          name: "imageAspectRatio",
+          label: "Aspect ratio",
+          defaultValue: "adapt",
+          configs: {
+            options: [
+              { value: "adapt", label: "Adapt to image" },
+              { value: "1/1", label: "Square (1/1)" },
+              { value: "3/4", label: "Portrait (3/4)" },
+              { value: "4/3", label: "Landscape (4/3)" },
+              { value: "16/9", label: "Widescreen (16/9)" },
+            ],
+          },
+        },
+      ],
+    },
+    {
+      group: "Product information",
       inputs: [
         {
           type: "text",
@@ -251,7 +349,7 @@ export let schema: HydrogenComponentSchema = {
           type: "switch",
           label: "Show vendor",
           name: "showVendor",
-          defaultValue: true,
+          defaultValue: false,
         },
         {
           type: "switch",
@@ -261,8 +359,8 @@ export let schema: HydrogenComponentSchema = {
         },
         {
           type: "switch",
-          label: "Show details",
-          name: "showDetails",
+          label: "Show short description",
+          name: "showShortDescription",
           defaultValue: true,
         },
         {
@@ -281,41 +379,14 @@ export let schema: HydrogenComponentSchema = {
           label: "Hide unavailable options",
           type: "switch",
           name: "hideUnavailableOptions",
-        },
-      ],
-    },
-    {
-      group: "Product Media",
-      inputs: [
-        {
-          label: "Show thumbnails",
-          name: "showThumbnails",
-          type: "switch",
-          defaultValue: true,
-        },
-        {
-          label: "Number of thumbnails",
-          name: "numberOfThumbnails",
-          type: "range",
-          condition: "showThumbnails.eq.true",
-          configs: {
-            min: 1,
-            max: 10,
-          },
-          defaultValue: 4,
-        },
-        {
-          label: "Gap between images",
-          name: "spacing",
-          type: "range",
-          configs: {
-            min: 0,
-            step: 2,
-            max: 100,
-          },
-          defaultValue: 10,
+          defaultValue: false,
         },
       ],
     },
   ],
+  presets: {
+    width: "stretch",
+    mediaLayout: "grid",
+    gridSize: "2x2",
+  },
 };

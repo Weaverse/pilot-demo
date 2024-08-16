@@ -1,30 +1,82 @@
 import { Image } from "@shopify/hydrogen";
+import { cva, type VariantProps } from "class-variance-authority";
 import clsx from "clsx";
 import { useState } from "react";
 import type { MediaFragment } from "storefrontapi.generated";
 import { FreeMode, Pagination, Thumbs } from "swiper/modules";
 import { Swiper, type SwiperClass, SwiperSlide } from "swiper/react";
+import { getImageAspectRatio } from "~/lib/utils";
 
-interface ProductMediaProps {
+let variants = cva(
+  [
+    "w-full grid justify-start gap-2 lg:gap-1",
+    "lg:grid-cols-1",
+    "grid-flow-col lg:grid-flow-row",
+    "overflow-x-scroll scroll-px-6",
+    "snap-x snap-mandatory",
+  ],
+  {
+    variants: {
+      gridSize: {
+        "1x1": "",
+        "2x2": "2xl:grid-cols-2",
+        mix: "2xl:grid-cols-2",
+      },
+    },
+  },
+);
+
+export interface ProductMediaProps extends VariantProps<typeof variants> {
+  mediaLayout: "grid" | "slider";
+  imageAspectRatio: "adapt" | "1/1" | "4/3" | "3/4" | "16/9";
+  showThumbnails: boolean;
   selectedVariant: any;
   media: MediaFragment[];
-  showThumbnails: boolean;
-  numberOfThumbnails: number;
-  spacing: number;
 }
 
 export function ProductMedia(props: ProductMediaProps) {
-  let { selectedVariant, media: _media, numberOfThumbnails, spacing } = props;
+  let {
+    mediaLayout,
+    gridSize,
+    imageAspectRatio,
+    selectedVariant,
+    media: _media,
+  } = props;
   let media = _media.filter((med) => med.__typename === "MediaImage");
   let [thumbsSwiper, setThumbsSwiper] = useState<SwiperClass | null>(null);
   let [activeIndex, setActiveIndex] = useState(0);
+
+  if (mediaLayout === "grid") {
+    return (
+      <div className={variants({ gridSize })}>
+        {media.map((med, idx) => {
+          let image = { ...med.image, altText: med.alt || "Product image" };
+          return (
+            <Image
+              key={med.id}
+              data={image}
+              loading={idx === 0 ? "eager" : "lazy"}
+              width={1660}
+              height={1660}
+              aspectRatio={getImageAspectRatio(image, imageAspectRatio)}
+              className={clsx(
+                "object-cover opacity-0 animate-fade-in w-[80vw] max-w-none lg:w-full lg:h-full",
+                gridSize === "mix" && idx % 3 === 0 && "lg:col-span-2",
+              )}
+              sizes="auto"
+            />
+          );
+        })}
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col-reverse md:flex-row gap-4 overflow-hidden">
       <Swiper
         onSwiper={setThumbsSwiper}
         direction="vertical"
-        spaceBetween={spacing}
+        spaceBetween={10}
         freeMode
         slidesPerView={5}
         threshold={2}
@@ -47,7 +99,7 @@ export function ProductMedia(props: ProductMediaProps) {
                 width={100}
                 height={100}
                 aspectRatio={"3/4"}
-                className="object-cover opacity-0 animate-fadeIn w-full h-full"
+                className="object-cover opacity-0 animate-fade-in w-full h-full"
                 sizes="auto"
               />
             </SwiperSlide>
@@ -84,7 +136,7 @@ export function ProductMedia(props: ProductMediaProps) {
                 data={image}
                 loading={i === 0 ? "eager" : "lazy"}
                 aspectRatio={"3/4"}
-                className="object-cover w-full h-auto opacity-0 animate-fadeIn"
+                className="object-cover w-full h-auto opacity-0 animate-fade-in"
                 sizes="auto"
               />
             </SwiperSlide>
