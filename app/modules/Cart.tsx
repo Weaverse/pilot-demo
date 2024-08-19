@@ -14,20 +14,15 @@ import type {
 import clsx from "clsx";
 import { useRef } from "react";
 import useScroll from "react-use/esm/useScroll";
-
 import type { CartApiQueryFragment } from "storefrontapi.generated";
-import { getInputStyleClasses } from "~/lib/utils";
-import {
-  Button,
-  FeaturedProducts,
-  Heading,
-  IconRemove,
-  Link,
-  Text,
-} from "~/modules";
+import { Link } from "~/components/link";
+import Button from "~/components/button";
+import { IconTrash } from "~/components/icons";
+import { getImageAspectRatio } from "~/lib/utils";
+import { Text } from "~/modules/text";
+import { CartBestSellers } from "./cart-best-sellers";
 
 type CartLine = OptimisticCart<CartApiQueryFragment>["lines"]["nodes"][0];
-
 type Layouts = "page" | "drawer";
 
 export function Cart({
@@ -40,14 +35,13 @@ export function Cart({
   cart: CartApiQueryFragment;
 }) {
   let optimisticCart = useOptimisticCart<CartApiQueryFragment>(cart);
-
-  const linesCount = Boolean(optimisticCart?.lines?.nodes?.length || 0);
+  let linesCount = Boolean(optimisticCart?.lines?.nodes?.length || 0);
 
   return (
-    <div className="w-[430px] max-w-screen">
+    <>
       <CartEmpty hidden={linesCount} onClose={onClose} layout={layout} />
       <CartDetails cart={optimisticCart} layout={layout} />
-    </div>
+    </>
   );
 }
 
@@ -58,19 +52,24 @@ export function CartDetails({
   layout: Layouts;
   cart: OptimisticCart<CartApiQueryFragment>;
 }) {
-  const cartHasItems = !!cart && cart.totalQuantity > 0;
-  const container = {
-    drawer: "grid grid-cols-1 h-screen-no-nav grid-rows-[1fr_auto]",
-    page: "w-full pb-12 grid md:grid-cols-2 md:items-start gap-8 md:gap-8 lg:gap-12",
-  };
-
+  let cartHasItems = !!cart && cart.totalQuantity > 0;
   return (
-    <div className={container[layout]}>
+    <div
+      className={clsx(
+        layout === "drawer" &&
+          "grid grid-cols-1 h-screen-no-nav grid-rows-[1fr_auto] w-[400px]",
+        layout === "page" && [
+          "pb-12 w-full max-w-page mx-auto",
+          "grid md:grid-cols-2 lg:grid-cols-3 md:items-start",
+          "gap-8 md:gap-8 lg:gap-12",
+        ],
+      )}
+    >
       <CartLines lines={cart?.lines?.nodes} layout={layout} />
       {cartHasItems && (
         <CartSummary cost={cart.cost} layout={layout}>
           <CartDiscounts discountCodes={cart.discountCodes} />
-          <CartCheckoutActions checkoutUrl={cart.checkoutUrl} />
+          <CartCheckoutActions checkoutUrl={cart.checkoutUrl} layout={layout} />
         </CartSummary>
       )}
     </div>
@@ -87,7 +86,7 @@ function CartDiscounts({
 }: {
   discountCodes: CartType["discountCodes"];
 }) {
-  const codes: string[] =
+  let codes: string[] =
     discountCodes
       ?.filter((discount) => discount.applicable)
       ?.map(({ code }) => code) || [];
@@ -101,9 +100,9 @@ function CartDiscounts({
           <div className="flex items-center justify-between">
             <UpdateDiscountForm>
               <button type="button">
-                <IconRemove
+                <IconTrash
                   aria-hidden="true"
-                  style={{ height: 18, marginRight: 4 }}
+                  className="h-[18px] w-[18px] mr-1"
                 />
               </button>
             </UpdateDiscountForm>
@@ -114,24 +113,16 @@ function CartDiscounts({
 
       {/* Show an input to apply a discount */}
       <UpdateDiscountForm discountCodes={codes}>
-        <div
-          className={clsx(
-            "flex",
-            "items-center gap-4 justify-between text-copy",
-          )}
-        >
+        <div className="flex items-center gap-3">
           <input
-            className={getInputStyleClasses()}
+            className="p-3 border border-line rounded-none !leading-tight grow"
             type="text"
             name="discountCode"
             placeholder="Discount code"
           />
-          <button
-            type="button"
-            className="flex justify-end font-medium whitespace-nowrap"
-          >
-            Apply Discount
-          </button>
+          <Button variant="outline" className="!leading-tight">
+            Apply
+          </Button>
         </div>
       </UpdateDiscountForm>
     </>
@@ -166,42 +157,51 @@ function CartLines({
   lines: CartLine[];
 }) {
   let currentLines = cartLines;
-  const scrollRef = useRef(null);
-  const { y } = useScroll(scrollRef);
-
-  const className = clsx([
-    y > 0 ? "border-t" : "",
-    layout === "page"
-      ? "flex-grow md:translate-y-4"
-      : "px-6 pb-6 sm-max:pt-2 overflow-auto transition md:px-12",
-  ]);
+  let scrollRef = useRef(null);
+  let { y } = useScroll(scrollRef);
 
   return (
     <section
       ref={scrollRef}
       aria-labelledby="cart-contents"
-      className={className}
+      className={clsx([
+        y > 0 ? "border-t border-line/50" : "",
+        layout === "page" && "flex-grow md:translate-y-4 lg:col-span-2",
+        layout === "drawer" && "px-5 pb-5 overflow-auto transition",
+      ])}
     >
-      <ul className="grid gap-6 md:gap-10">
+      <ul
+        className={clsx(
+          "grid",
+          layout === "page" && "gap-9",
+          layout === "drawer" && "gap-5",
+        )}
+      >
         {currentLines.map((line) => (
-          <CartLineItem key={line.id} line={line} />
+          <CartLineItem key={line.id} line={line} layout={layout} />
         ))}
       </ul>
     </section>
   );
 }
 
-function CartCheckoutActions({ checkoutUrl }: { checkoutUrl: string }) {
+function CartCheckoutActions({
+  checkoutUrl,
+  layout,
+}: { checkoutUrl: string; layout: Layouts }) {
   if (!checkoutUrl) return null;
 
   return (
-    <div className="flex flex-col mt-2">
+    <div className="flex flex-col gap-3">
       <a href={checkoutUrl} target="_self">
-        <Button as="span" width="full">
-          Continue to Checkout
-        </Button>
+        <Button className="w-full">Continue to Checkout</Button>
       </a>
       {/* @todo: <CartShopPayButton cart={cart} /> */}
+      {layout === "drawer" && (
+        <Button variant="link" link="/cart" className="w-fit mx-auto">
+          View cart
+        </Button>
+      )}
     </div>
   );
 }
@@ -215,26 +215,28 @@ function CartSummary({
   cost: CartApiQueryFragment["cost"];
   layout: Layouts;
 }) {
-  const summary = {
-    drawer: "grid gap-4 p-6 border-t md:px-12",
-    page: "sticky top-nav grid gap-6 p-4 md:px-6 md:translate-y-4 bg-background/5 rounded w-full",
-  };
-
   return (
-    <section aria-labelledby="summary-heading" className={summary[layout]}>
+    <section
+      aria-labelledby="summary-heading"
+      className={clsx(
+        layout === "drawer" && "grid gap-4 p-5 border-t border-line/50",
+        layout === "page" &&
+          "sticky top-nav grid gap-6 p-4 md:px-6 md:translate-y-4 bg-background/5 rounded w-full",
+      )}
+    >
       <h2 id="summary-heading" className="sr-only">
         Order summary
       </h2>
       <dl className="grid">
         <div className="flex items-center justify-between font-medium">
-          <Text as="dt">Subtotal</Text>
-          <Text as="dd" data-test="subtotal">
+          <dt>Subtotal</dt>
+          <dd>
             {cost?.subtotalAmount?.amount ? (
               <Money data={cost?.subtotalAmount} />
             ) : (
               "-"
             )}
-          </Text>
+          </dd>
         </div>
       </dl>
       {children}
@@ -247,12 +249,12 @@ type OptimisticData = {
   quantity?: number;
 };
 
-function CartLineItem({ line }: { line: CartLine }) {
-  const optimisticData = useOptimisticData<OptimisticData>(line?.id);
+function CartLineItem({ line, layout }: { line: CartLine; layout: Layouts }) {
+  let optimisticData = useOptimisticData<OptimisticData>(line?.id);
 
   if (!line?.id) return null;
 
-  const { id, quantity, merchandise } = line;
+  let { id, quantity, merchandise } = line;
   if (typeof quantity === "undefined" || !merchandise?.product) return null;
 
   return (
@@ -265,69 +267,83 @@ function CartLineItem({ line }: { line: CartLine }) {
         display: optimisticData?.action === "remove" ? "none" : "flex",
       }}
     >
-      <div className="flex-shrink">
+      <div className="shrink-0">
         {merchandise.image && (
           <Image
-            width={110}
-            height={110}
+            width={250}
+            height={250}
             data={merchandise.image}
-            className="object-cover object-center w-24 h-24 border rounded md:w-28 md:h-28"
+            className="object-cover object-center w-24 h-auto"
             alt={merchandise.title}
+            aspectRatio={getImageAspectRatio(merchandise.image, "adapt")}
           />
         )}
       </div>
-
-      <div className="flex justify-between flex-grow">
-        <div className="grid gap-2">
-          <div>
-            {merchandise?.product?.handle ? (
-              <Link to={`/products/${merchandise.product.handle}`}>
-                {merchandise?.product?.title || ""}
-              </Link>
-            ) : (
-              <Text>{merchandise?.product?.title || ""}</Text>
-            )}
-          </div>
-          <div className="grid pb-2">
-            {(merchandise?.selectedOptions || [])
-              .filter((option) => option.value !== "Default Title")
-              .map((option) => (
-                <Text color="subtle" key={option.name}>
-                  {option.name}: {option.value}
-                </Text>
-              ))}
-          </div>
-
-          <div className="flex items-center gap-2">
-            <div className="flex justify-start text-copy">
-              <CartLineQuantityAdjust line={line} />
+      <div className="flex flex-col justify-between grow">
+        <div className="flex justify-between gap-4">
+          <div className="space-y-2">
+            <div>
+              {merchandise?.product?.handle ? (
+                <Link to={`/products/${merchandise.product.handle}`}>
+                  <span className="underline-animation">
+                    {merchandise?.product?.title || ""}
+                  </span>
+                </Link>
+              ) : (
+                <p>{merchandise?.product?.title || ""}</p>
+              )}
             </div>
-            <ItemRemoveButton lineId={id} />
+            <div className="text-sm space-y-0.5">
+              {(merchandise?.selectedOptions || [])
+                .filter((option) => option.value !== "Default Title")
+                .map((option) => (
+                  <div
+                    key={option.name}
+                    className="text-[var(--color-compare-price-text)]"
+                  >
+                    {option.name}: {option.value}
+                  </div>
+                ))}
+            </div>
           </div>
+          {layout === "drawer" && (
+            <ItemRemoveButton lineId={id} className="-mt-1.5 -mr-2" />
+          )}
         </div>
-        <Text>
+        <div
+          className={clsx(
+            "flex items-center gap-2",
+            layout === "drawer" && "justify-between",
+          )}
+        >
+          <CartLineQuantityAdjust line={line} />
+          {layout === "page" && <ItemRemoveButton lineId={id} />}
           <CartLinePrice line={line} as="span" />
-        </Text>
+        </div>
       </div>
     </li>
   );
 }
 
-function ItemRemoveButton({ lineId }: { lineId: CartLine["id"] }) {
+function ItemRemoveButton({
+  lineId,
+  className,
+}: { lineId: CartLine["id"]; className?: string }) {
   return (
     <CartForm
       route="/cart"
       action={CartForm.ACTIONS.LinesRemove}
-      inputs={{
-        lineIds: [lineId],
-      }}
+      inputs={{ lineIds: [lineId] }}
     >
       <button
-        className="flex items-center justify-center w-10 h-10 border rounded"
+        className={clsx(
+          "flex items-center justify-center w-8 h-8 border-none",
+          className,
+        )}
         type="submit"
       >
         <span className="sr-only">Remove</span>
-        <IconRemove aria-hidden="true" />
+        <IconTrash aria-hidden="true" className="h-4 w-4" />
       </button>
       <OptimisticInput id={lineId} data={{ action: "remove" }} />
     </CartForm>
@@ -335,29 +351,29 @@ function ItemRemoveButton({ lineId }: { lineId: CartLine["id"] }) {
 }
 
 function CartLineQuantityAdjust({ line }: { line: CartLine }) {
-  const optimisticId = line?.id;
-  const optimisticData = useOptimisticData<OptimisticData>(optimisticId);
+  let optimisticId = line?.id;
+  let optimisticData = useOptimisticData<OptimisticData>(optimisticId);
 
   if (!line || typeof line?.quantity === "undefined") return null;
 
-  const optimisticQuantity = optimisticData?.quantity || line.quantity;
+  let optimisticQuantity = optimisticData?.quantity || line.quantity;
 
-  const { id: lineId, isOptimistic } = line;
-  const prevQuantity = Number(Math.max(0, optimisticQuantity - 1).toFixed(0));
-  const nextQuantity = Number((optimisticQuantity + 1).toFixed(0));
+  let { id: lineId, isOptimistic } = line;
+  let prevQuantity = Number(Math.max(0, optimisticQuantity - 1).toFixed(0));
+  let nextQuantity = Number((optimisticQuantity + 1).toFixed(0));
 
   return (
     <>
       <label htmlFor={`quantity-${lineId}`} className="sr-only">
         Quantity, {optimisticQuantity}
       </label>
-      <div className="flex items-center border border-line rounded">
+      <div className="flex items-center border border-line/50">
         <UpdateCartButton lines={[{ id: lineId, quantity: prevQuantity }]}>
           <button
-            type="button"
+            type="submit"
             name="decrease-quantity"
             aria-label="Decrease quantity"
-            className="w-10 h-10 transition disabled:text-body/50 disabled:cursor-not-allowed"
+            className="w-9 h-9 transition disabled:text-body/50 disabled:cursor-not-allowed"
             value={prevQuantity}
             disabled={optimisticQuantity <= 1 || isOptimistic}
           >
@@ -375,8 +391,8 @@ function CartLineQuantityAdjust({ line }: { line: CartLine }) {
 
         <UpdateCartButton lines={[{ id: lineId, quantity: nextQuantity }]}>
           <button
-            type="button"
-            className="w-10 h-10 transition disabled:text-body/50 disabled:cursor-not-allowed"
+            type="submit"
+            className="w-9 h-9 transition disabled:text-body/50 disabled:cursor-not-allowed"
             name="increase-quantity"
             value={nextQuantity}
             aria-label="Increase quantity"
@@ -425,7 +441,7 @@ function CartLinePrice({
 }) {
   if (!line?.cost?.amountPerQuantity || !line?.cost?.totalAmount) return null;
 
-  const moneyV2 =
+  let moneyV2 =
     priceType === "regular"
       ? line.cost.totalAmount
       : line.cost.compareAtAmountPerQuantity;
@@ -434,7 +450,14 @@ function CartLinePrice({
     return null;
   }
 
-  return <Money withoutTrailingZeros {...passthroughProps} data={moneyV2} />;
+  return (
+    <Money
+      withoutTrailingZeros
+      {...passthroughProps}
+      data={moneyV2}
+      className="text-sm ml-auto"
+    />
+  );
 }
 
 export function CartEmpty({
@@ -446,40 +469,45 @@ export function CartEmpty({
   layout?: Layouts;
   onClose?: () => void;
 }) {
-  const scrollRef = useRef(null);
-  const { y } = useScroll(scrollRef);
-
-  const container = {
-    drawer: clsx([
-      "content-start gap-4 px-6 pb-8 transition overflow-y-scroll md:gap-12 md:px-12 h-screen-no-nav md:pb-12",
-      y > 0 ? "border-t" : "",
-    ]),
-    page: clsx([
-      hidden ? "" : "grid",
-      `pb-12 w-full md:items-start gap-4 md:gap-8 lg:gap-12`,
-    ]),
-  };
-
+  let scrollRef = useRef(null);
+  let { y } = useScroll(scrollRef);
   return (
-    <div ref={scrollRef} className={container[layout]} hidden={hidden}>
-      <section className="grid gap-6">
-        <Text format>
+    <div
+      ref={scrollRef}
+      className={clsx(
+        layout === "drawer" && [
+          "content-start space-y-12 px-5 pb-5 transition overflow-y-scroll h-screen-no-nav w-[400px]",
+          y > 0 ? "border-t" : "",
+        ],
+        layout === "page" && [
+          hidden ? "" : "grid",
+          "pb-12 w-full md:items-start gap-4 md:gap-8 lg:gap-12",
+        ],
+      )}
+      hidden={hidden}
+    >
+      <div>
+        <p className="mb-4">
           Looks like you haven&rsquo;t added anything yet, let&rsquo;s get you
           started!
-        </Text>
-        <div>
-          <Button onClick={onClose}>Continue shopping</Button>
-        </div>
-      </section>
-      <section className="grid gap-8 pt-16">
-        <FeaturedProducts
+        </p>
+        <Button
+          className={clsx(layout === "drawer" ? "w-full" : "")}
+          link={layout === "page" ? "/products" : ""}
+          onClick={onClose}
+        >
+          Continue shopping
+        </Button>
+      </div>
+      <div className="grid gap-4">
+        <CartBestSellers
           count={4}
           heading="Shop Best Sellers"
           layout={layout}
           onClose={onClose}
           sortKey="BEST_SELLING"
         />
-      </section>
+      </div>
     </div>
   );
 }

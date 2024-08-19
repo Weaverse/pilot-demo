@@ -5,10 +5,11 @@ import type {
   HydrogenComponentSchema,
 } from "@weaverse/hydrogen";
 import { forwardRef } from "react";
-
 import type { ArticleFragment, BlogQuery } from "storefrontapi.generated";
 import { getImageLoadingPriority } from "~/lib/const";
-import { Grid, Link, PageHeader, Section } from "~/modules";
+import { PageHeader, Section } from "~/modules/text";
+import { Link } from "~/components/link";
+import { Grid } from "~/modules/grid";
 
 interface BlogsProps extends HydrogenComponentProps {
   layout: "blog" | "default";
@@ -52,7 +53,7 @@ let Blogs = forwardRef<HTMLElement, BlogsProps>((props, ref) => {
               {articles.map((article, i) => (
                 <ArticleCard
                   key={article.id}
-                  blogHandle={blog!.handle}
+                  blogHandle={blog.handle}
                   article={article}
                   loading={getImageLoadingPriority(i, 2)}
                   showAuthor={showAuthor}

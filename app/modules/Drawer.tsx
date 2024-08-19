@@ -3,11 +3,12 @@ import {
   DialogPanel,
   DialogTitle,
   Transition,
+  TransitionChild,
 } from "@headlessui/react";
 import { useLocation } from "@remix-run/react";
 import clsx from "clsx";
 import { Fragment, useEffect, useState } from "react";
-import { IconCaretLeft, IconX } from "~/components/Icons";
+import { IconCaretLeft, IconX } from "~/components/icons";
 import { cn } from "~/lib/cn";
 
 /**
@@ -43,7 +44,7 @@ export function Drawer({
   spacing?: "sm" | "md" | "lg";
   children: React.ReactNode;
 }) {
-  const offScreen = {
+  let offScreen = {
     right: "translate-x-full",
     left: "-translate-x-full",
     top: "-translate-y-full",
@@ -52,7 +53,7 @@ export function Drawer({
   return (
     <Transition appear show={open} as={Fragment}>
       <Dialog as="div" className="relative z-50" onClose={onClose}>
-        <Transition.Child
+        <TransitionChild
           as={Fragment}
           enter="ease-out duration-300"
           enterFrom="opacity-0 left-0"
@@ -62,20 +63,17 @@ export function Drawer({
           leaveTo="opacity-0"
         >
           <div className="fixed inset-0 bg-body bg-opacity-50 text-body" />
-        </Transition.Child>
-
+        </TransitionChild>
         <div className="fixed inset-0 top-nav">
           <div className="absolute inset-0 overflow-hidden">
             <div
-              className={`fixed inset-y-0 flex ${
-                openFrom === "right"
-                  ? "right-0 max-w-full"
-                  : openFrom === "top"
-                    ? "top-full-nav overflow-hidden w-screen"
-                    : ""
-              }`}
+              className={clsx(
+                "fixed inset-y-0 flex",
+                openFrom === "right" && "right-0 max-w-full",
+                openFrom === "top" && "overflow-hidden w-screen",
+              )}
             >
-              <Transition.Child
+              <TransitionChild
                 as={Fragment}
                 enter="transform transition ease-in-out duration-300"
                 enterFrom={offScreen[openFrom]}
@@ -119,25 +117,23 @@ export function Drawer({
                         </button>
                       )}
                       {heading !== null && (
-                        <DialogTitle>
-                          <div className="font-medium text-base">{heading}</div>
-                        </DialogTitle>
+                        <DialogTitle as="h5">{heading}</DialogTitle>
                       )}
                       {!isBackMenu && (
                         <button
                           type="button"
-                          className="p-4 -m-4 transition text-body hover:text-body/50"
+                          className="transition text-body hover:text-body/50"
                           onClick={onClose}
                           data-test="close-cart"
                         >
-                          <IconX aria-label="Close panel" />
+                          <IconX aria-label="Close panel" className="w-5 h-5" />
                         </button>
                       )}
                     </header>
                   )}
                   {children}
                 </DialogPanel>
-              </Transition.Child>
+              </TransitionChild>
             </div>
           </div>
         </div>
@@ -147,7 +143,7 @@ export function Drawer({
 }
 
 /* Use for associating arialabelledby with the title*/
-Drawer.Title = Dialog.Title;
+Drawer.Title = DialogTitle;
 
 export function useDrawer(openDefault = false) {
   let [isOpen, setIsOpen] = useState(openDefault);
