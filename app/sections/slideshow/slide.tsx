@@ -11,6 +11,7 @@ import { overlayInputs } from "~/components/overlay";
 import type { OverlayAndBackgroundProps } from "~/components/overlay-and-background";
 import { OverlayAndBackground } from "~/components/overlay-and-background";
 import { layoutInputs } from "~/components/section";
+import { useAnimation } from "~/hooks/use-animation";
 
 let variants = cva("w-full h-full flex flex-col [&_.paragraph]:mx-[unset]", {
   variants: {
@@ -73,6 +74,7 @@ export interface SlideProps
 }
 
 let Slide = forwardRef<HTMLDivElement, SlideProps>((props, ref) => {
+  const [scope] = useAnimation(ref);
   let {
     contentPosition,
     width,
@@ -91,7 +93,7 @@ let Slide = forwardRef<HTMLDivElement, SlideProps>((props, ref) => {
   } = props;
 
   return (
-    <div ref={ref} {...rest} className="w-full h-full">
+    <div ref={scope} {...rest} className="w-full h-full">
       <OverlayAndBackground {...props} />
       <div
         className={variants({ contentPosition, width, gap, verticalPadding })}
@@ -119,7 +121,7 @@ export let schema: HydrogenComponentSchema = {
           defaultValue: "center center",
         },
         ...layoutInputs.filter(
-          (inp) => inp.name !== "divider" && inp.name !== "borderRadius",
+          (inp) => inp.name !== "divider" && inp.name !== "borderRadius"
         ),
       ],
     },
@@ -127,8 +129,8 @@ export let schema: HydrogenComponentSchema = {
       group: "Background",
       inputs: backgroundInputs.filter((inp) =>
         ["backgroundImage", "backgroundFit", "backgroundPosition"].includes(
-          inp.name,
-        ),
+          inp.name
+        )
       ),
     },
     { group: "Overlay", inputs: overlayInputs },

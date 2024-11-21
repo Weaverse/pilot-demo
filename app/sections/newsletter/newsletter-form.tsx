@@ -5,7 +5,7 @@ import type {
 } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { forwardRef } from "react";
-import Button from "~/components/button";
+import { Button } from "~/components/button";
 import { IconEnvelopeSimple } from "~/components/icons";
 import type { CustomerApiPlayLoad } from "~/routes/($locale).api.customer";
 
@@ -32,6 +32,7 @@ let NewsLetterForm = forwardRef<HTMLDivElement, NewsLetterInputProps>(
           method="POST"
           action="/api/customer"
           className="flex items-center w-full"
+          data-motion="fade-up"
         >
           <div className="flex items-center border-r-0 border-y border-l grow">
             <IconEnvelopeSimple className="w-5 h-5 text-body/80 ml-3 mr-1.5 shrink-0" />
@@ -45,8 +46,8 @@ let NewsLetterForm = forwardRef<HTMLDivElement, NewsLetterInputProps>(
           </div>
           <Button
             type="submit"
-            loading={state === "submitting"}
             className="gap-3"
+            loading={state === "submitting"}
           >
             {buttonText}
           </Button>
@@ -54,6 +55,7 @@ let NewsLetterForm = forwardRef<HTMLDivElement, NewsLetterInputProps>(
         {helpText && (
           <div
             className="text-body/60 mt-2"
+            data-motion="fade-up"
             dangerouslySetInnerHTML={{ __html: helpText }}
           />
         )}

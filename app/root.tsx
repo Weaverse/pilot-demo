@@ -27,12 +27,14 @@ import type {
   MetaArgs,
 } from "@shopify/remix-oxygen";
 import { defer } from "@shopify/remix-oxygen";
-import { withWeaverse } from "@weaverse/hydrogen";
+import { useThemeSettings, withWeaverse } from "@weaverse/hydrogen";
+import type { CSSProperties } from "react";
+import type { LayoutQuery } from "storefrontapi.generated";
 import invariant from "tiny-invariant";
 import { seoPayload } from "~/lib/seo.server";
-import { Layout as PageLayout } from "~/modules/layout";
 import { CustomAnalytics } from "~/modules/custom-analytics";
 import { GlobalLoading } from "~/modules/global-loading";
+import { Layout as PageLayout } from "~/modules/layout";
 import { TooltipProvider } from "./components/tooltip";
 import { DEFAULT_LOCALE, parseMenu } from "./lib/utils";
 import { GenericError } from "./modules/generic-error";
@@ -93,10 +95,10 @@ export let links: LinksFunction = () => {
 
 export async function loader(args: LoaderFunctionArgs) {
   // Start fetching non-critical data without blocking time to first byte
-  const deferredData = loadDeferredData(args);
+  let deferredData = loadDeferredData(args);
 
   // Await the critical data required to render initial state of the page
-  const criticalData = await loadCriticalData(args);
+  let criticalData = await loadCriticalData(args);
 
   return defer({
     ...deferredData,
@@ -109,14 +111,14 @@ export async function loader(args: LoaderFunctionArgs) {
  * needed to render the page. If it's unavailable, the whole page should 400 or 500 error.
  */
 async function loadCriticalData({ request, context }: LoaderFunctionArgs) {
-  const [layout] = await Promise.all([
+  let [layout] = await Promise.all([
     getLayoutData(context),
     // Add other queries here, so that they are loaded in parallel
   ]);
 
-  const seo = seoPayload.root({ shop: layout.shop, url: request.url });
+  let seo = seoPayload.root({ shop: layout.shop, url: request.url });
 
-  const { storefront, env } = context;
+  let { storefront, env } = context;
 
   return {
     layout,
@@ -128,6 +130,10 @@ async function loadCriticalData({ request, context }: LoaderFunctionArgs) {
     consent: {
       checkoutDomain: env.PUBLIC_CHECKOUT_DOMAIN,
       storefrontAccessToken: env.PUBLIC_STOREFRONT_API_TOKEN,
+      withPrivacyBanner: true,
+      // localize the privacy banner
+      country: storefront.i18n.country,
+      language: storefront.i18n.language,
     },
     selectedLocale: storefront.i18n,
     weaverseTheme: await context.weaverse.loadThemeSettings(),
@@ -141,7 +147,7 @@ async function loadCriticalData({ request, context }: LoaderFunctionArgs) {
  * Make sure to not throw any errors here, as it will cause the page to 500.
  */
 function loadDeferredData({ context }: LoaderFunctionArgs) {
-  const { cart, customerAccount } = context;
+  let { cart, customerAccount } = context;
 
   return {
     isLoggedIn: customerAccount.isLoggedIn(),
@@ -149,14 +155,15 @@ function loadDeferredData({ context }: LoaderFunctionArgs) {
   };
 }
 
-export const meta = ({ data }: MetaArgs<typeof loader>) => {
+export let meta = ({ data }: MetaArgs<typeof loader>) => {
   return getSeoMeta(data?.seo as SeoConfig);
 };
 
 function Layout({ children }: { children?: React.ReactNode }) {
-  const nonce = useNonce();
-  const data = useRouteLoaderData<RootLoader>("root");
-  const locale = data?.selectedLocale ?? DEFAULT_LOCALE;
+  let nonce = useNonce();
+  let data = useRouteLoaderData<RootLoader>("root");
+  let locale = data?.selectedLocale ?? DEFAULT_LOCALE;
+  let { topbarHeight, topbarText } = useThemeSettings();
 
   return (
     <html lang={locale.language}>
@@ -168,7 +175,12 @@ function Layout({ children }: { children?: React.ReactNode }) {
         <GlobalStyle />
       </head>
       <body
-        style={{ opacity: 0 }}
+        style={
+          {
+            opacity: 0,
+            "--initial-topbar-height": `${topbarText ? topbarHeight : 0}px`,
+          } as CSSProperties
+        }
         className="transition-opacity !opacity-100 duration-300"
       >
         {data ? (
@@ -209,8 +221,8 @@ function App() {
 export default withWeaverse(App);
 
 export function ErrorBoundary({ error }: { error: Error }) {
-  const routeError = useRouteError();
-  const isRouteError = isRouteErrorResponse(routeError);
+  let routeError = useRouteError();
+  let isRouteError = isRouteErrorResponse(routeError);
 
   let pageType = "page";
 
@@ -237,7 +249,7 @@ export function ErrorBoundary({ error }: { error: Error }) {
   );
 }
 
-const LAYOUT_QUERY = `#graphql
+let LAYOUT_QUERY = `#graphql
   query layout(
     $language: LanguageCode
     $headerMenuHandle: String!
@@ -321,13 +333,15 @@ const LAYOUT_QUERY = `#graphql
 ` as const;
 
 async function getLayoutData({ storefront, env }: AppLoadContext) {
-  const data = await storefront.query(LAYOUT_QUERY, {
-    variables: {
-      headerMenuHandle: "main-menu",
-      footerMenuHandle: "footer",
-      language: storefront.i18n.language,
-    },
-  });
+  let data = await storefront
+    .query<LayoutQuery>(LAYOUT_QUERY, {
+      variables: {
+        headerMenuHandle: "main-menu",
+        footerMenuHandle: "footer",
+        language: storefront.i18n.language,
+      },
+    })
+    .catch(console.error);
 
   invariant(data, "No data returned from Shopify API");
 
@@ -341,7 +355,7 @@ async function getLayoutData({ storefront, env }: AppLoadContext) {
     */
   let customPrefixes = { CATALOG: "products" };
 
-  const headerMenu = data?.headerMenu
+  let headerMenu = data?.headerMenu
     ? parseMenu(
         data.headerMenu,
         data.shop.primaryDomain.url,
@@ -350,7 +364,7 @@ async function getLayoutData({ storefront, env }: AppLoadContext) {
       )
     : undefined;
 
-  const footerMenu = data?.footerMenu
+  let footerMenu = data?.footerMenu
     ? parseMenu(
         data.footerMenu,
         data.shop.primaryDomain.url,

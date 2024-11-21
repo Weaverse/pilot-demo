@@ -68,13 +68,14 @@ export function ProductVariants(props: ProductVariantsProps) {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" data-motion="fade-up">
       <VariantSelector
         handle={handle}
         variants={nodes}
-        options={options.filter((option) => option.values.length > 1)}
+        options={options.filter((option) => option.optionValues.length > 1)}
       >
         {({ option }) => {
+          console.log("option", option);
           let optionName = option.name;
           let clonedSelectedOptionMap = new Map(selectedOptionMap);
           let values = option.values

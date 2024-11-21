@@ -24,9 +24,8 @@ export function MobileHeader({
   openCart: () => void;
   openMenu: () => void;
 }) {
-  // useHeaderStyleFix(containerStyle, setContainerStyle, isHome);
   let isHome = useIsHomePath();
-  let { enableTransparentHeader, topbarHeight } = useThemeSettings();
+  let { enableTransparentHeader } = useThemeSettings();
   let { y } = useWindowScroll();
   let params = useParams();
   let scrolled = y >= 50;
@@ -34,11 +33,6 @@ export function MobileHeader({
 
   return (
     <header
-      style={
-        {
-          "--initial-topbar-height": `${topbarHeight}px`,
-        } as React.CSSProperties
-      }
       className={cn(
         "transition-colors duration-300 ease-in-out",
         "h-nav z-40 top-[var(--topbar-height,var(--initial-topbar-height))] w-full leading-none",
@@ -53,7 +47,7 @@ export function MobileHeader({
               !scrolled &&
                 "text-[var(--color-transparent-header-text)] bg-transparent border-transparent",
             ]
-          : "sticky top-0"
+          : "sticky top-0",
       )}
     >
       <div className="flex items-center justify-start w-full">

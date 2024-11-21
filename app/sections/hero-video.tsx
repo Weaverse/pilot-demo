@@ -18,6 +18,7 @@ import {
 import { useInView } from "react-intersection-observer";
 import type { OverlayProps } from "~/components/overlay";
 import { Overlay, overlayInputs } from "~/components/overlay";
+import { useAnimation } from "~/hooks/use-animation";
 
 const SECTION_HEIGHTS = {
   small: {
@@ -32,10 +33,6 @@ const SECTION_HEIGHTS = {
     desktop: "70vh",
     mobile: "80vh",
   },
-  full: {
-    desktop: "calc(var(--screen-height, 100vh)",
-    mobile: "calc(var(--screen-height, 100vh)",
-  },
   custom: null,
 };
 
@@ -44,7 +41,7 @@ export interface HeroVideoProps
     HydrogenComponentProps,
     OverlayProps {
   videoURL: string;
-  height: "small" | "medium" | "large" | "full" | "custom";
+  height: "small" | "medium" | "large" | "custom";
   heightOnDesktop: number;
   heightOnMobile: number;
 }
@@ -149,6 +146,8 @@ let HeroVideo = forwardRef<HTMLElement, HeroVideoProps>((props, ref) => {
     };
   }, [inView, height, heightOnDesktop, heightOnMobile]);
 
+  let [scope] = useAnimation();
+
   return (
     <section
       ref={setRefs}
@@ -185,7 +184,9 @@ let HeroVideo = forwardRef<HTMLElement, HeroVideoProps>((props, ref) => {
           overlayOpacity={overlayOpacity}
           className="z-0"
         />
-        <div className={clsx(variants({ gap }))}>{children}</div>
+        <div ref={scope} className={clsx(variants({ gap }))}>
+          {children}
+        </div>
       </div>
     </section>
   );
@@ -221,7 +222,6 @@ export let schema: HydrogenComponentSchema = {
               { value: "small", label: "Small" },
               { value: "medium", label: "Medium" },
               { value: "large", label: "Large" },
-              { value: "full", label: "Fullscreen" },
               { value: "custom", label: "Custom" },
             ],
           },
