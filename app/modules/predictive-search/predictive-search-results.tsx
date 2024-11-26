@@ -11,6 +11,7 @@ export function PredictiveSearchResults() {
   let products = results?.find(({ type }) => type === "products");
 
   function goToSearchResult(event: React.MouseEvent<HTMLAnchorElement>) {
+    event.preventDefault();
     let type = event.currentTarget.dataset.type;
     if (!searchInputRef.current) return;
     if (type === "SearchQuerySuggestion") {
@@ -76,7 +77,7 @@ export function PredictiveSearchResults() {
                 to={`/search?q=${searchTerm.current}`}
                 className="flex items-center gap-2"
               >
-                <span className="underline-animation">View all products</span>
+                <span className="reveal-underline">View all products</span>
                 <IconArrowRight className="w-4 h-4 mb-[3px]" />
               </Link> */}
             </div>

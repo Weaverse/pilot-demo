@@ -43,10 +43,12 @@ export function SearchResultItem({
           </div>
         )}
         <div className="space-y-1">
-          {vendor && <div className="text-body/50 text-sm">By {vendor}</div>}
+          {vendor && (
+            <div className="text-body-subtle text-sm">By {vendor}</div>
+          )}
           {styledTitle ? (
             <div
-              className="underline-animation"
+              className="reveal-underline"
               dangerouslySetInnerHTML={{ __html: styledTitle }}
             />
           ) : (
@@ -55,7 +57,7 @@ export function SearchResultItem({
                 __typename === "Product" ? "line-clamp-1" : "line-clamp-2",
               )}
             >
-              <span className="underline-animation">{title}</span>
+              <span className="reveal-underline">{title}</span>
             </div>
           )}
           {price && (

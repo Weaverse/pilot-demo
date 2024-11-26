@@ -19,7 +19,7 @@ import type { ChildEnhancedMenuItem, EnhancedMenu } from "~/lib/utils";
 import { Input } from "~/modules/input";
 import { CountrySelector } from "./country-selector";
 
-let variants = cva("divide-y divide-line/50 space-y-9", {
+let variants = cva("divide-y divide-line-subtle space-y-9", {
   variants: {
     width: {
       full: "w-full h-full",
@@ -198,7 +198,7 @@ function FooterMenu({
           <div className="flex flex-col gap-2">
             {items.map((item, ind) => (
               <Link to={item.to} key={ind} className="relative">
-                <span className="underline-animation">{item.title}</span>
+                <span className="reveal-underline">{item.title}</span>
               </Link>
             ))}
           </div>

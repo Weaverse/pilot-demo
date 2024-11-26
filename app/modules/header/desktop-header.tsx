@@ -74,19 +74,19 @@ export function DesktopHeader({
     >
       <div
         className={cn(
-          "h-nav flex items-center justify-between leading-none gap-8",
+          "h-nav flex items-center justify-between gap-8",
           variants({ width: headerWidth }),
         )}
       >
         <Logo isTransparent={isTransparent} shopName={shopName} />
-        {menu && <DesktopMenu menu={menu} />}
+        <DesktopMenu menu={menu} />
         <div className="flex items-center gap-1 z-1">
           <SearchToggle
             isOpen={isOpen}
             openDrawer={openDrawer}
             closeDrawer={closeDrawer}
           />
-          <AccountLink className="relative flex items-center justify-center w-8 h-8 focus:ring-body/5" />
+          <AccountLink className="relative flex items-center justify-center w-8 h-8" />
           <CartCount
             isHome={isHome}
             openCart={openCart}
