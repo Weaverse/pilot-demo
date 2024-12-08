@@ -190,10 +190,7 @@ function Layout({ children }: { children?: React.ReactNode }) {
             consent={data.consent}
           >
             <TooltipProvider disableHoverableContent>
-              <PageLayout
-                key={`${locale.language}-${locale.country}`}
-                layout={data.layout}
-              >
+              <PageLayout key={`${locale.language}-${locale.country}`}>
                 {children}
               </PageLayout>
             </TooltipProvider>
@@ -221,7 +218,7 @@ function App() {
 export default withWeaverse(App);
 
 export function ErrorBoundary({ error }: { error: Error }) {
-  let routeError = useRouteError();
+  let routeError: { status?: number; data?: any } = useRouteError();
   let isRouteError = isRouteErrorResponse(routeError);
 
   let pageType = "page";
