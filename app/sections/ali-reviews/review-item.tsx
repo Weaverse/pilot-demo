@@ -1,9 +1,8 @@
-import { SealCheck } from "@phosphor-icons/react";
+import { SealCheck, X } from "@phosphor-icons/react";
 import clsx from "clsx";
 import { useState } from "react";
 import ReactCountryFlag from "react-country-flag";
-import { IconX } from "~/components/icons";
-import { Rating } from "./rating";
+import { StarRating } from "~/components/star-rating";
 
 export type AliReview = {
   id: number;
@@ -86,7 +85,7 @@ export function ReviewItem(props: ReviewItemProps) {
           )}
           {showStar && (
             <div className="flex items-center gap-0.5">
-              <Rating rating={review.star} />
+              <StarRating rating={review.star} />
             </div>
           )}
         </div>
@@ -102,7 +101,7 @@ export function ReviewItem(props: ReviewItemProps) {
                 "flex items-center justify-center bg-gray-800 w-20 h-20 overflow-hidden cursor-pointer",
                 "outline-offset-2 hover:outline hover:outline-2 hover:outline-gray-500",
                 previewMedia?.id === media.id &&
-                  "outline outline-2 outline-gray-500",
+                  "outline outline-2 outline-gray-500"
               )}
               onClick={() => {
                 if (previewMedia?.id === media.id) {
@@ -144,7 +143,7 @@ function ReviewMediaPreview(props: {
             alt="Review media preview"
           />
         </div>
-        <IconX
+        <X
           className="w-5 h-5 cursor-pointer text-gray-600"
           onClick={closePreview}
         />

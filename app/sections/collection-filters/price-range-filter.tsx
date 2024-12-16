@@ -25,17 +25,21 @@ export function PriceRangeFilter({
   let [maxPrice, setMaxPrice] = useState(max);
 
   function handleFilter() {
+    let paramsClone = new URLSearchParams(params);
     if (minPrice === undefined && maxPrice === undefined) {
-      params.delete(`${FILTER_URL_PREFIX}price`);
-      navigate(`${location.pathname}?${params.toString()}`);
-      return;
+      paramsClone.delete(`${FILTER_URL_PREFIX}price`);
+    } else {
+      let price = {
+        ...(minPrice === undefined ? {} : { min: minPrice }),
+        ...(maxPrice === undefined ? {} : { max: maxPrice }),
+      };
+      paramsClone = filterInputToParams({ price }, paramsClone);
     }
-    let price = {
-      ...(minPrice === undefined ? {} : { min: minPrice }),
-      ...(maxPrice === undefined ? {} : { max: maxPrice }),
-    };
-    let newParams = filterInputToParams({ price }, params);
-    navigate(`${location.pathname}?${newParams.toString()}`);
+    if (params.toString() !== paramsClone.toString()) {
+      navigate(`${location.pathname}?${paramsClone.toString()}`, {
+        preventScrollReset: true,
+      });
+    }
   }
 
   return (
@@ -75,7 +79,7 @@ export function PriceRangeFilter({
             onPointerDown={() => (thumbRef.current = s)}
             className={clsx(
               "block h-4 w-4 bg-gray-800 cursor-grab rounded-full shadow-md",
-              "focus-visible:outline-none",
+              "focus-visible:outline-none"
             )}
           />
         ))}

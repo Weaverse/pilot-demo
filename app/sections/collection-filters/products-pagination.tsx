@@ -11,9 +11,9 @@ import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 import type { CollectionDetailsQuery } from "storefrontapi.generated";
 import Link from "~/components/link";
+import { ProductCard } from "~/components/product/product-card";
 import { getImageLoadingPriority } from "~/lib/const";
-import { getAppliedFilterLink, type AppliedFilter } from "~/lib/filter";
-import { ProductCard } from "~/modules/product-card";
+import { type AppliedFilter, getAppliedFilterLink } from "~/lib/filter";
 
 export function ProductsPagination({
   gridSizeDesktop,
@@ -50,6 +50,7 @@ export function ProductsPagination({
                   to={getAppliedFilterLink(filter, params, location)}
                   className="px-2 py-1 border border-line-subtle hover:border-line items-center gap-2"
                   variant="custom"
+                  preventScrollReset
                 >
                   <span>{label}</span>
                   <X className="w-4 h-4" />
@@ -62,6 +63,7 @@ export function ProductsPagination({
               to={pathname}
               variant="underline"
               aria-label="Clear all applied filters"
+              preventScrollReset
             >
               Clear all filters
             </Link>
@@ -83,8 +85,12 @@ export function ProductsPagination({
               className="flex w-full flex-col gap-8 items-center"
               style={
                 {
-                  "--cols-mobile": `repeat(${gridSizeMobile || 1}, minmax(0, 1fr))`,
-                  "--cols-desktop": `repeat(${gridSizeDesktop || 3}, minmax(0, 1fr))`,
+                  "--cols-mobile": `repeat(${
+                    gridSizeMobile || 1
+                  }, minmax(0, 1fr))`,
+                  "--cols-desktop": `repeat(${
+                    gridSizeDesktop || 3
+                  }, minmax(0, 1fr))`,
                 } as React.CSSProperties
               }
             >
