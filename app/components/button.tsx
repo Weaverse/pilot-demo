@@ -22,7 +22,7 @@ export let variants = cva(
           "border-[--btn-primary-bg]",
           "hover:text-[--btn-primary-bg]",
           "hover:bg-[--btn-primary-text]",
-          "hover:border-[--btn-primary-text]",
+          "hover:border-[--btn-primary-bg]",
         ],
         secondary: [
           "border px-4 py-3",
@@ -55,7 +55,7 @@ export let variants = cva(
           "bg-transparent pb-1 text-body",
           "after:bg-body after:absolute after:left-0 after:bottom-0.5 after:w-full after:h-px",
           "after:scale-x-100 after:transition-transform after:origin-right",
-          "hover:after:origin-left hover:after:animate-underline",
+          "hover:after:origin-left hover:after:animate-underline-toggle",
         ],
       },
     },
@@ -83,6 +83,7 @@ export interface ButtonProps
   disabled?: boolean;
   loading?: boolean;
   children?: React.ReactNode;
+  animate?: boolean;
 }
 
 export let Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
@@ -98,6 +99,7 @@ export let Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
     backgroundColorHover,
     borderColorHover,
     style = {},
+    animate = true,
     children,
     ...rest
   } = props;
@@ -124,12 +126,15 @@ export let Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
     content = children;
   }
 
+  if (animate) {
+    rest["data-motion"] = "fade-up";
+  }
+
   return (
     <button
       ref={ref}
       style={style}
       type={type}
-      data-motion="fade-up"
       {...rest}
       className={cn(variants({ variant, className }))}
     >

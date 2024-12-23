@@ -9,11 +9,10 @@ import type {
   CustomerUpdateInput,
 } from "@shopify/hydrogen/customer-account-api-types";
 import { type ActionFunction, json, redirect } from "@shopify/remix-oxygen";
+import type { CustomerUpdateMutation } from "customer-accountapi.generated";
 import invariant from "tiny-invariant";
 import { Button } from "~/components/button";
 import Link from "~/components/link";
-import { CUSTOMER_UPDATE_MUTATION } from "~/graphql/customer-account/customer-update-mutation";
-import { getInputStyleClasses } from "~/lib/utils";
 import { doLogout } from "./($locale).account_.logout";
 
 export interface AccountOutletContext {
@@ -34,19 +33,19 @@ export interface ActionData {
   };
 }
 
-const formDataHas = (formData: FormData, key: string) => {
+function formDataHas(formData: FormData, key: string) {
   if (!formData.has(key)) return false;
 
-  const value = formData.get(key);
+  let value = formData.get(key);
   return typeof value === "string" && value.length > 0;
-};
+}
 
-export const handle = {
+export let handle = {
   renderInModal: true,
 };
 
-export const action: ActionFunction = async ({ request, context, params }) => {
-  const formData = await request.formData();
+export let action: ActionFunction = async ({ request, context, params }) => {
+  let formData = await request.formData();
 
   // Double-check current user is logged in.
   // Will throw a logout redirect if not.
@@ -55,21 +54,24 @@ export const action: ActionFunction = async ({ request, context, params }) => {
   }
 
   try {
-    const customer: CustomerUpdateInput = {};
+    let customer: CustomerUpdateInput = {};
 
-    formDataHas(formData, "firstName") &&
-      (customer.firstName = formData.get("firstName") as string);
-    formDataHas(formData, "lastName") &&
-      (customer.lastName = formData.get("lastName") as string);
+    if (formDataHas(formData, "firstName")) {
+      customer.firstName = formData.get("firstName") as string;
+    }
+    if (formDataHas(formData, "lastName")) {
+      customer.lastName = formData.get("lastName") as string;
+    }
 
-    const { data, errors } = await context.customerAccount.mutate(
-      CUSTOMER_UPDATE_MUTATION,
-      {
-        variables: {
-          customer,
+    let { data, errors } =
+      await context.customerAccount.mutate<CustomerUpdateMutation>(
+        CUSTOMER_UPDATE_MUTATION,
+        {
+          variables: {
+            customer,
+          },
         },
-      },
-    );
+      );
 
     invariant(!errors?.length, errors?.[0]?.message);
 
@@ -100,57 +102,60 @@ export const action: ActionFunction = async ({ request, context, params }) => {
  * - use the presence of outlet data (in `account.tsx`) to open/close the modal (no useState)
  */
 export default function AccountDetailsEdit() {
-  const actionData = useActionData<ActionData>();
-  const { customer } = useOutletContext<AccountOutletContext>();
-  const { state } = useNavigation();
+  let actionData = useActionData<ActionData>();
+  let { customer } = useOutletContext<AccountOutletContext>();
+  let { state } = useNavigation();
 
   return (
-    <>
-      <div className="mt-4 mb-6 text-xl">Edit account</div>
-      <Form method="post">
+    <div className="space-y-2">
+      <div className="text-xl py-2.5">Edit account</div>
+      <Form method="post" className="space-y-3">
         {actionData?.formError && (
-          <div className="flex items-center justify-center mb-6 bg-red-100 rounded">
-            <p className="m-4 text-red-900">{actionData.formError}</p>
+          <div className="flex items-center justify-center bg-red-100 text-red-900 p-3">
+            {actionData.formError}
           </div>
         )}
-        <div className="mt-3">
-          <input
-            className={getInputStyleClasses()}
-            id="firstName"
-            name="firstName"
-            type="text"
-            autoComplete="given-name"
-            placeholder="First name"
-            aria-label="First name"
-            defaultValue={customer.firstName ?? ""}
-          />
-        </div>
-        <div className="mt-3">
-          <input
-            className={getInputStyleClasses()}
-            id="lastName"
-            name="lastName"
-            type="text"
-            autoComplete="family-name"
-            placeholder="Last name"
-            aria-label="Last name"
-            defaultValue={customer.lastName ?? ""}
-          />
-        </div>
-        <div className="mt-6 flex gap-3 items-center justify-end">
-          <Link to="/account" className="mb-2 px-4" variant="secondary">
+        <input
+          id="firstName"
+          name="firstName"
+          className="appearance-none border border-line p-3 focus:outline-none w-full"
+          type="text"
+          autoComplete="given-name"
+          placeholder="First name"
+          aria-label="First name"
+          defaultValue={customer.firstName ?? ""}
+        />
+        <input
+          id="lastName"
+          name="lastName"
+          className="appearance-none border border-line p-3 focus:outline-none w-full"
+          type="text"
+          autoComplete="family-name"
+          placeholder="Last name"
+          aria-label="Last name"
+          defaultValue={customer.lastName ?? ""}
+        />
+        <div className="py-2.5 flex gap-6 items-center justify-end">
+          <Link to="/account" className="hover:underline underline-offset-4">
             Cancel
           </Link>
-          <Button
-            className="mb-2"
-            type="submit"
-            variant="primary"
-            disabled={state !== "idle"}
-          >
+          <Button type="submit" variant="primary" disabled={state !== "idle"}>
             {state !== "idle" ? "Saving" : "Save"}
           </Button>
         </div>
       </Form>
-    </>
+    </div>
   );
 }
+
+const CUSTOMER_UPDATE_MUTATION = `#graphql
+  mutation customerUpdate($customer: CustomerUpdateInput!) {
+    customerUpdate(input: $customer) {
+      userErrors {
+        code
+        field
+        message
+      }
+    }
+  }
+`;

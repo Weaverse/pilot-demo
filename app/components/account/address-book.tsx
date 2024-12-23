@@ -2,7 +2,7 @@ import { Form } from "@remix-run/react";
 import type { CustomerAddress } from "@shopify/hydrogen/customer-account-api-types";
 import type { CustomerDetailsFragment } from "customer-accountapi.generated";
 import { Link } from "~/components/link";
-import { Text } from "../../modules/text";
+import { Button } from "~/components/button";
 
 export function AccountAddressBook({
   customer,
@@ -14,18 +14,16 @@ export function AccountAddressBook({
   return (
     <div className="space-y-4">
       <div className="font-bold">Address Book</div>
-      <div>
+      <div className="space-y-3">
         {!addresses?.length && (
-          <Text className="mb-1" size="fine" width="narrow" as="p">
-            You haven&apos;t saved any addresses yet.
-          </Text>
+          <div>You haven&apos;t saved any addresses yet.</div>
         )}
         <div className="">
-          <Link to="address/add" className="mb-5" variant="primary">
+          <Link to="address/add" className="mb-5" variant="outline">
             Add an Address
           </Link>
         </div>
-        {Boolean(addresses?.length) && (
+        {addresses?.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             {customer.defaultAddress && (
               <Address address={customer.defaultAddress} defaultAddress />
@@ -36,7 +34,7 @@ export function AccountAddressBook({
                 <Address key={address.id} address={address} />
               ))}
           </div>
-        )}
+        ) : null}
       </div>
     </div>
   );
@@ -50,10 +48,10 @@ function Address({
   defaultAddress?: boolean;
 }) {
   return (
-    <div className="p-5 border border-[#B7B7B7] rounded-sm flex flex-col">
+    <div className="p-5 border border-line-subtle flex flex-col">
       {defaultAddress && (
         <div className="mb-3 flex flex-row">
-          <span className="px-3 py-1 text-xs font-medium border text-body-subtle">
+          <span className="px-3 py-1 text-sm font-medium bg-body-subtle text-body-inverse">
             Default
           </span>
         </div>
@@ -74,16 +72,21 @@ function Address({
       <div className="flex flex-row font-medium mt-6 items-baseline">
         <Link
           to={`/account/address/${encodeURIComponent(address.id)}`}
-          className="text-left underline text-body-subtle"
+          className="text-body-subtle after:bg-body-subtle"
           prefetch="intent"
+          variant="underline"
         >
           Edit
         </Link>
         <Form action="address/delete" method="delete">
           <input type="hidden" name="addressId" value={address.id} />
-          <button className="text-left text-body-subtle ml-6 text-sm">
+          <Button
+            variant="underline"
+            className="after:bg-body-subtle text-body-subtle ml-6"
+            animate={false}
+          >
             Remove
-          </button>
+          </Button>
         </Form>
       </div>
     </div>

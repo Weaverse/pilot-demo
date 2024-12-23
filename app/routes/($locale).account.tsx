@@ -17,12 +17,12 @@ import { Suspense } from "react";
 import { AccountDetails } from "~/components/account/account-details";
 import { AccountAddressBook } from "~/components/account/address-book";
 import { AccountOrderHistory } from "~/components/account/orders";
+import { OutletModal } from "~/components/account/outlet-modal";
 import { ProductCard } from "~/components/product/product-card";
+import { Section } from "~/components/section";
 import { Swimlane } from "~/components/swimlane";
 import { CACHE_NONE, routeHeaders } from "~/data/cache";
-import { CUSTOMER_DETAILS_QUERY } from "~/graphql/customer-account/customer-details-query";
 import { usePrefixPathWithLocale } from "~/lib/utils";
-import { Modal } from "~/modules/modal";
 import { doLogout } from "./($locale).account_.logout";
 import {
   type FeaturedData,
@@ -60,18 +60,20 @@ export default function Authenticated() {
   let matches = useMatches();
 
   // routes that export handle { renderInModal: true }
-  let renderOutletInModal = matches.some((match) => {
-    let handle = match?.handle as { renderInModal?: boolean };
-    return handle?.renderInModal;
-  });
+  let renderInModal = matches.find(
+    (match: { handle?: { renderInModal?: boolean } }) => {
+      let handle = match?.handle;
+      return handle?.renderInModal;
+    },
+  );
 
   if (outlet) {
-    if (renderOutletInModal) {
+    if (renderInModal) {
       return (
         <>
-          <Modal cancelLink="/account">
+          <OutletModal cancelLink="/account">
             <Outlet context={{ customer: data.customer }} />
-          </Modal>
+          </OutletModal>
           <Account {...data} customer={data.customer} />
         </>
       );
@@ -93,20 +95,26 @@ function Account({ customer, heading, featuredData }: AccountType) {
   let addresses = flattenConnection(customer.addresses);
 
   return (
-    <div className="max-w-5xl px-4 mx-auto py-10 space-y-10">
-      <div className="space-y-8">
-        <h2 className="h4">{heading}</h2>
+    <Section
+      width="fixed"
+      verticalPadding="medium"
+      containerClassName="space-y-10"
+    >
+      <div className="space-y-4">
+        <h1 className="h4 font-medium">{heading}</h1>
         <Form method="post" action={usePrefixPathWithLocale("/account/logout")}>
           <button
             type="submit"
             className="text-body-subtle group flex gap-2 items-center"
           >
             <SignOut className="w-4 h-4" />
-            <span className="group-hover:underline">Sign out</span>
+            <span className="group-hover:underline underline-offset-4">
+              Sign out
+            </span>
           </button>
         </Form>
       </div>
-      {orders && <AccountOrderHistory orders={orders} />}
+      {orders ? <AccountOrderHistory orders={orders} /> : null}
       <AccountDetails customer={customer} />
       <AccountAddressBook addresses={addresses} customer={customer} />
       {!orders.length && (
@@ -132,6 +140,86 @@ function Account({ customer, heading, featuredData }: AccountType) {
           </Await>
         </Suspense>
       )}
-    </div>
+    </Section>
   );
 }
+
+// NOTE: https://shopify.dev/docs/api/customer/latest/queries/customer
+const CUSTOMER_DETAILS_QUERY = `#graphql
+  query CustomerDetails {
+    customer {
+      ...CustomerDetails
+    }
+  }
+  fragment OrderCard on Order {
+    id
+    number
+    processedAt
+    financialStatus
+    fulfillments(first: 1) {
+      nodes {
+        status
+      }
+    }
+    totalPrice {
+      amount
+      currencyCode
+    }
+    lineItems(first: 2) {
+      edges {
+        node {
+          title
+          image {
+            altText
+            height
+            url
+            width
+          }
+        }
+      }
+    }
+  }
+
+  fragment AddressPartial on CustomerAddress {
+    id
+    formatted
+    firstName
+    lastName
+    company
+    address1
+    address2
+    territoryCode
+    zoneCode
+    city
+    zip
+    phoneNumber
+  }
+
+  fragment CustomerDetails on Customer {
+    firstName
+    lastName
+    phoneNumber {
+      phoneNumber
+    }
+    emailAddress {
+      emailAddress
+    }
+    defaultAddress {
+      ...AddressPartial
+    }
+    addresses(first: 6) {
+      edges {
+        node {
+          ...AddressPartial
+        }
+      }
+    }
+    orders(first: 250, sortKey: PROCESSED_AT, reverse: true) {
+      edges {
+        node {
+          ...OrderCard
+        }
+      }
+    }
+  }
+` as const;
