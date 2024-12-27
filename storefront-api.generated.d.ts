@@ -284,24 +284,6 @@ export type CartApiQueryFragment = Pick<
   >;
 };
 
-export type OrderCardFragment = Pick<
-  StorefrontAPI.Order,
-  'id' | 'orderNumber' | 'processedAt' | 'financialStatus' | 'fulfillmentStatus'
-> & {
-  currentTotalPrice: Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>;
-  lineItems: {
-    edges: Array<{
-      node: Pick<StorefrontAPI.OrderLineItem, 'title'> & {
-        variant?: StorefrontAPI.Maybe<{
-          image?: StorefrontAPI.Maybe<
-            Pick<StorefrontAPI.Image, 'url' | 'altText' | 'height' | 'width'>
-          >;
-        }>;
-      };
-    }>;
-  };
-};
-
 export type LayoutQueryVariables = StorefrontAPI.Exact<{
   language?: StorefrontAPI.InputMaybe<StorefrontAPI.LanguageCode>;
   headerMenuHandle: StorefrontAPI.Scalars['String']['input'];
@@ -566,21 +548,24 @@ export type MenuFragment = Pick<StorefrontAPI.Menu, 'id'> & {
   >;
 };
 
-export type ColorsConfigsQueryVariables = StorefrontAPI.Exact<{
+export type SwatchesConfigsQueryVariables = StorefrontAPI.Exact<{
   type: StorefrontAPI.Scalars['String']['input'];
-  nameKey: StorefrontAPI.Scalars['String']['input'];
-  valueKey: StorefrontAPI.Scalars['String']['input'];
 }>;
 
-export type ColorsConfigsQuery = {
+export type SwatchesConfigsQuery = {
   metaobjects: {
     nodes: Array<
       Pick<StorefrontAPI.Metaobject, 'id'> & {
-        name?: StorefrontAPI.Maybe<
-          Pick<StorefrontAPI.MetaobjectField, 'value'>
-        >;
-        value?: StorefrontAPI.Maybe<
-          Pick<StorefrontAPI.MetaobjectField, 'value'>
+        fields: Array<
+          Pick<StorefrontAPI.MetaobjectField, 'key' | 'value'> & {
+            reference?: StorefrontAPI.Maybe<
+              Pick<StorefrontAPI.MediaImage, 'id'> & {
+                image?: StorefrontAPI.Maybe<
+                  Pick<StorefrontAPI.Image, 'altText' | 'id' | 'url'>
+                >;
+              }
+            >;
+          }
         >;
       }
     >;
@@ -1841,9 +1826,9 @@ interface GeneratedQueryTypes {
     return: LayoutQuery;
     variables: LayoutQueryVariables;
   };
-  '#graphql\n  query colorsConfigs($type: String!, $nameKey: String!, $valueKey: String!) {\n    metaobjects(first: 100, type: $type) {\n      nodes {\n        id\n        name: field(key: $nameKey) {\n          value\n        }\n        value: field(key: $valueKey) {\n          value\n        }\n      }\n    }\n  }\n': {
-    return: ColorsConfigsQuery;
-    variables: ColorsConfigsQueryVariables;
+  '#graphql\n  query swatchesConfigs($type: String!) {\n    metaobjects(first: 100, type: $type) {\n      nodes {\n        id\n        fields {\n          key\n          value\n          reference {\n            ... on MediaImage {\n              id\n              image {\n                altText\n                id\n                url\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n': {
+    return: SwatchesConfigsQuery;
+    variables: SwatchesConfigsQueryVariables;
   };
   '#graphql\n  query shopQuery($country: CountryCode, $language: LanguageCode)\n  @inContext(country: $country, language: $language) {\n    shop {\n      name\n      description\n    }\n  }\n': {
     return: ShopQueryQuery;

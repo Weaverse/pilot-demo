@@ -88,21 +88,29 @@ export const LAYOUT_QUERY = `#graphql
   }
 ` as const;
 
-export const COLORS_CONFIGS_QUERY = `#graphql
-  query colorsConfigs($type: String!, $nameKey: String!, $valueKey: String!) {
+export const SWATCHES_CONFIGS_QUERY = `#graphql
+  query swatchesConfigs($type: String!) {
     metaobjects(first: 100, type: $type) {
       nodes {
         id
-        name: field(key: $nameKey) {
+        fields {
+          key
           value
-        }
-        value: field(key: $valueKey) {
-          value
+          reference {
+            ... on MediaImage {
+              id
+              image {
+                altText
+                id
+                url
+              }
+            }
+          }
         }
       }
     }
   }
-`;
+` as const;
 
 export const SHOP_QUERY = `#graphql
   query shopQuery($country: CountryCode, $language: LanguageCode)
