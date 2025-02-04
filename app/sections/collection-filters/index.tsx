@@ -2,7 +2,7 @@ import { useLoaderData } from "@remix-run/react";
 import type { HydrogenComponentSchema } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { forwardRef, useEffect, useState } from "react";
-import type { CollectionDetailsQuery } from "storefront-api.generated";
+import type { CollectionQuery } from "storefront-api.generated";
 import { BreadCrumb } from "~/components/breadcrumb";
 import { Image } from "~/components/image";
 import { Section, type SectionProps, layoutInputs } from "~/components/section";
@@ -57,7 +57,7 @@ let CollectionFilters = forwardRef<HTMLElement, CollectionFiltersProps>(
       ...rest
     } = props;
     let { collection, collections } = useLoaderData<
-      CollectionDetailsQuery & {
+      CollectionQuery & {
         collections: Array<{ handle: string; title: string }>;
       }
     >();
@@ -173,10 +173,11 @@ export let schema: HydrogenComponentSchema = {
           label: "Show description",
           defaultValue: false,
         },
-        {
-          type: "heading",
-          label: "Banner",
-        },
+      ],
+    },
+    {
+      group: "Banner",
+      inputs: [
         {
           type: "switch",
           name: "showBanner",
@@ -290,7 +291,7 @@ export let schema: HydrogenComponentSchema = {
       ],
     },
     {
-      group: "Products",
+      group: "Products grid",
       inputs: [
         {
           type: "select",
