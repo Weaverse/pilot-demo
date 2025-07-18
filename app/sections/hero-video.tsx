@@ -88,7 +88,7 @@ function getPlayerSize(id: string) {
   return { width: "100%", height: "auto" };
 }
 
-const ReactPlayer = lazy(() => import("react-player/lazy"));
+const ReactPlayer = lazy(() => import("react-player"));
 
 const HeroVideo = forwardRef<HTMLElement, HeroVideoProps>((props, ref) => {
   const {
@@ -163,10 +163,10 @@ const HeroVideo = forwardRef<HTMLElement, HeroVideoProps>((props, ref) => {
           "sm:translate-x-[min(0px,calc((var(--desktop-height)/9*16-100vw)/-2))]",
         )}
       >
-        {inView && isBrowser && (
+        {inView && (
           <Suspense fallback={null}>
             <ReactPlayer
-              url={videoURL}
+              src={videoURL}
               playing
               muted
               loop={true}
