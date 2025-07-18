@@ -163,7 +163,7 @@ const HeroVideo = forwardRef<HTMLElement, HeroVideoProps>((props, ref) => {
           "sm:translate-x-[min(0px,calc((var(--desktop-height)/9*16-100vw)/-2))]",
         )}
       >
-        {inView && (
+        {inView && isBrowser && (
           <Suspense fallback={null}>
             <ReactPlayer
               src={videoURL}
