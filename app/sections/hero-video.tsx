@@ -88,7 +88,7 @@ function getPlayerSize(id: string) {
   return { width: "100%", height: "auto" };
 }
 
-const ReactPlayer = lazy(() => import("react-player"));
+const ReactPlayer = lazy(() => import("react-player/lazy"));
 
 const HeroVideo = forwardRef<HTMLElement, HeroVideoProps>((props, ref) => {
   const {
