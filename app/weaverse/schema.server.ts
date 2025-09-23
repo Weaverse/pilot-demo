@@ -677,6 +677,12 @@ export const themeSchema: HydrogenThemeSchema = {
         },
         {
           type: "switch",
+          label: "Show reviews (stars rating)",
+          name: "pcardShowReviews",
+          defaultValue: true,
+        },
+        {
+          type: "switch",
           label: "Show lowest price",
           name: "pcardShowLowestPrice",
           defaultValue: false,
@@ -923,6 +929,20 @@ export const themeSchema: HydrogenThemeSchema = {
           },
           defaultValue: "center",
           condition: (theme) => theme.newsletterPopupEnabled === true,
+        },
+      ],
+    },
+    {
+      group: "Search",
+      inputs: [
+        {
+          type: "textarea",
+          name: "popularSearchKeywords",
+          label: "Popular search keywords",
+          defaultValue: "sunglasses, hats, jackets, shoes",
+          placeholder: "sunglasses, hats, jackets, shoes",
+          helpText:
+            "Enter popular search keywords separated by commas. E.g. <strong>sunglasses, hats, jackets, shoes</strong>",
         },
       ],
     },

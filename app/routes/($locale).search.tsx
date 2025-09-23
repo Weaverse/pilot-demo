@@ -6,6 +6,7 @@ import {
   Pagination,
 } from "@shopify/hydrogen";
 import type { LoaderFunctionArgs, MetaArgs } from "@shopify/remix-oxygen";
+import { useThemeSettings } from "@weaverse/hydrogen";
 import { clsx } from "clsx";
 import { Fragment, Suspense, useEffect, useState } from "react";
 import { Await, Form, useLoaderData } from "react-router";
@@ -90,8 +91,6 @@ export const meta = ({ matches }: MetaArgs<typeof loader>) => {
   );
 };
 
-const POPULAR_SEARCHES = ["French Linen", "Shirt", "Cotton"];
-
 export default function Search() {
   const { searchTerm, products, recommendations } =
     useLoaderData<typeof loader>();
@@ -106,25 +105,9 @@ export default function Search() {
     <Section width="fixed" verticalPadding="medium">
       <BreadCrumb className="justify-center" page="Search" />
       <h4 className="mt-4 mb-2.5 text-center font-medium">Search</h4>
-      <div className="flex items-center justify-center text-body-subtle">
-        <span>Popular Searches:</span>
-        {POPULAR_SEARCHES.map((search, ind) => (
-          <Fragment key={search}>
-            <Link
-              to={`/search?q=${search}`}
-              className="ml-1 underline-offset-4 hover:underline"
-            >
-              {search}
-            </Link>
-            {ind < POPULAR_SEARCHES.length - 1 && (
-              <span className="mr-px">,</span>
-            )}
-          </Fragment>
-        ))}
-      </div>
       <Form
         method="get"
-        className="mx-auto mt-6 flex w-[700px] max-w-[90vw] items-center gap-3 border border-line px-3"
+        className="mx-auto mt-6 mb-4 flex w-[700px] max-w-[90vw] items-center gap-3 border border-line px-3"
       >
         <MagnifyingGlassIcon className="h-5 w-5 shrink-0 text-gray-500" />
         <input
@@ -143,6 +126,7 @@ export default function Search() {
           <XIcon className="h-5 w-5" />
         </button>
       </Form>
+      <PopularKeywords />
       {hasResults ? (
         <Pagination connection={products}>
           {({
@@ -164,7 +148,7 @@ export default function Search() {
                 )}
                 <div
                   className={clsx([
-                    "w-full gap-x-1.5 gap-y-8 lg:gap-y-10",
+                    "w-full gap-x-4 gap-y-6 lg:gap-y-10",
                     "grid grid-cols-1 lg:grid-cols-4",
                   ])}
                 >
@@ -193,6 +177,34 @@ export default function Search() {
   );
 }
 
+function PopularKeywords() {
+  const { popularSearchKeywords } = useThemeSettings();
+  if (!popularSearchKeywords?.length) {
+    return null;
+  }
+  const popularKeywords: string[] = popularSearchKeywords
+    .split(",")
+    .map((k) => k.trim())
+    .filter((k) => k.length > 0);
+
+  return (
+    <div className="flex items-center justify-center text-body-subtle">
+      <span>Popular searches:</span>
+      {popularKeywords.map((search, ind) => (
+        <Fragment key={search}>
+          <Link
+            to={`/search?q=${search}`}
+            className="ml-1 underline-offset-4 hover:underline"
+          >
+            {search}
+          </Link>
+          {ind < popularKeywords.length - 1 && <span className="mr-px">,</span>}
+        </Fragment>
+      ))}
+    </div>
+  );
+}
+
 function NoResults({
   searchTerm,
   recommendations,
@@ -203,7 +215,7 @@ function NoResults({
   return (
     <>
       {searchTerm && (
-        <div className="my-10 flex flex-col items-center justify-center text-lg">
+        <div className="my-10 lg:my-16 flex flex-col items-center justify-center text-xl">
           No results for "{searchTerm}", try a different search.
         </div>
       )}
