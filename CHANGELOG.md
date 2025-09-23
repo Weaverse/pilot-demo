@@ -1,5 +1,54 @@
 # @weaverse/pilot
 
+## 6.0.0
+
+### Major Changes
+
+- **Refactored component architecture**: Removed forwardRef pattern from most components, simplifying props handling and improving maintainability
+- **Enhanced Judge.me integration**: Restructured API routes for better reviews handling with new endpoint structure
+- **Improved state management**: Replaced React context with Zustand store for product quantity management
+- **Code organization**: Moved RevealUnderline component to proper components directory for better structure
+
+### Features
+
+- **Featured Products enhancements**: Added collection and manual product selection options alongside auto (best selling) mode
+- **Enhanced product badges**: Added support for polymorphic components with `as` prop for flexible rendering
+- **Improved product quantity component**: Added customizable label prop for better flexibility
+
+### Bug Fixes
+
+- Fixed import paths for RevealUnderline component across multiple files
+- Removed unnecessary Biome ignore comments for console.error statements
+- Fixed spacing and formatting issues in various components
+- Updated API route structure for better organization
+
+### Dependencies
+
+- Updated @weaverse/hydrogen to latest version
+- Updated dependencies for better compatibility and performance
+
+## 5.6.0
+
+### Patch Changes
+
+- Updated dependencies
+  - @weaverse/hydrogen@5.4.1
+
+## 0.0.0-beta-20250825103739
+
+### Patch Changes
+
+- Updated dependencies
+- Updated dependencies [6642fc2]
+  - @weaverse/hydrogen@0.0.0-beta-20250825103739
+
+## 5.5.1-beta.0
+
+### Patch Changes
+
+- Updated dependencies
+  - @weaverse/hydrogen@5.4.1-beta.0
+
 ## 5.1.8
 
 ### Patch Changes
