@@ -1,5 +1,56 @@
 # @weaverse/pilot
 
+## 6.0.3
+
+### Patch Changes
+
+- **Component refactoring**: Migrated from forwardRef pattern to ref as props for Weaverse sections and components, improving API consistency
+- **UI/UX improvements**:
+  - Enhanced ProductCard and ProductMedia components with view transition effects for smoother user experience
+  - Refactored PredictiveSearchButton layout and repositioned PopularKeywords component
+  - Updated JudgemeStarsRating component with improved loading state styling
+  - Added variant prices display in SingleProduct component
+- **Code cleanup**:
+  - Removed unused NavLink component
+  - Cleaned up SingleProduct component by removing unused children prop and childTypes from schema
+  - Updated default onClickEvent value to "scroll-to-section" in JudgemeStarsRating schema
+  - Removed unused imports across multiple components
+- **Developer experience**:
+  - Updated CLAUDE.md documentation with improved project guidance
+  - Added .github/copilot-instructions.md to .gitignore
+  - Updated GitHub workflow configuration
+
+## 6.0.2
+
+### Patch Changes
+
+- Updated dependencies [3720e74]
+- Updated dependencies [469f291]
+- Updated dependencies [9ee3be2]
+  - @weaverse/hydrogen@5.5.0
+
+## 6.0.2-beta.0
+
+### Patch Changes
+
+- @weaverse/hydrogen@5.5.1-beta.0
+
+## 6.0.1
+
+### Patch Changes
+
+- Updated dependencies [21ba4ed]
+- Updated dependencies [5c6060b]
+- Updated dependencies [2468404]
+  - @weaverse/hydrogen@5.5.0
+
+## 6.0.1-beta.0
+
+### Patch Changes
+
+- Updated dependencies
+  - @weaverse/hydrogen@5.5.0-beta.0
+
 ## 6.0.0
 
 ### Major Changes
