@@ -97,7 +97,7 @@ export function ErrorBoundary({ error }: { error: Error }) {
   );
 }
 
-export function Layout({ children }: { children: React.ReactNode }) {
+export const Layout = withWeaverse(function Layout({ children }: { children: React.ReactNode }) {
   const location = useLocation();
   const nonce = useNonce();
   const data = useRouteLoaderData<RootLoader>("root");
@@ -123,6 +123,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Meta />
         <Links />
         <GlobalStyle />
+        <script
+          type="module"
+          src="https://cdn.shopify.com/storefront/web-components/account.js"
+          async
+          nonce={nonce}
+        />
       </head>
       <body
         style={
@@ -168,6 +174,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </body>
     </html>
   );
-}
+});
 
-export default withWeaverse(App);
+export default App;
