@@ -2,6 +2,7 @@ import {
   Analytics,
   CartForm,
   type CartQueryDataReturn,
+  useOptimisticCart,
 } from "@shopify/hydrogen";
 import type {
   CartBuyerIdentityInput,
@@ -112,11 +113,13 @@ export async function loader({ context }: LoaderFunctionArgs) {
 }
 
 export default function CartRoute() {
-  const { cart, featuredProducts } = useLoaderData<typeof loader>();
+  const { cart: originalCart, featuredProducts } =
+    useLoaderData<typeof loader>();
+  const cart = useOptimisticCart(originalCart);
 
   return (
     <>
-      <Section width="fixed" verticalPadding="medium">
+      <Section width="fixed" verticalPadding="medium" overflow="unset">
         <h1 className="h3 mb-8 text-center md:mb-16">
           Cart ({cart?.totalQuantity || 0})
         </h1>
@@ -130,7 +133,7 @@ export default function CartRoute() {
               return null;
             }
             return (
-              <Section width="fixed" verticalPadding="large" gap={32}>
+              <Section width="stretch" verticalPadding="large" gap={32}>
                 <h2 className="h4 text-center">More from our best sellers</h2>
                 <Swimlane className="gap-4">
                   {products.nodes.map((product) => (
