@@ -30,6 +30,7 @@ export interface SectionProps<T = any>
     Partial<OverlayProps> {
   ref?: React.Ref<HTMLElement>;
   as?: React.ElementType;
+  gap?: number;
   containerClassName?: string;
   children?: React.ReactNode;
   animate?: boolean;
@@ -52,24 +53,6 @@ const variants = cva("relative", {
       small: "py-4 md:py-6 lg:py-8",
       medium: "py-8 md:py-12 lg:py-16",
       large: "py-12 md:py-24 lg:py-32",
-    },
-    gap: {
-      0: "",
-      4: "space-y-1",
-      8: "space-y-2",
-      12: "space-y-3",
-      16: "space-y-4",
-      20: "space-y-5",
-      24: "space-y-3 lg:space-y-6",
-      28: "space-y-3.5 lg:space-y-7",
-      32: "space-y-4 lg:space-y-8",
-      36: "space-y-4 lg:space-y-9",
-      40: "space-y-5 lg:space-y-10",
-      44: "space-y-5 lg:space-y-11",
-      48: "space-y-6 lg:space-y-12",
-      52: "space-y-6 lg:space-y-[52px]",
-      56: "space-y-7 lg:space-y-14",
-      60: "space-y-7 lg:space-y-[60px]",
     },
     overflow: {
       unset: "",
@@ -133,6 +116,8 @@ export function Section(props: SectionProps) {
   style = {
     ...style,
     "--section-bg-color": backgroundColor,
+    "--gap-desktop": `${gap ?? 0}px`,
+    "--gap-mobile": (gap ?? 0) <= 20 ? `${gap ?? 0}px` : `${(gap ?? 0) / 2}px`,
   } as React.CSSProperties;
 
   const isBgForContent = backgroundFor === "content";
@@ -156,7 +141,8 @@ export function Section(props: SectionProps) {
       {!isBgForContent && <OverlayAndBackground {...props} />}
       <div
         className={cn(
-          variants({ gap, width, verticalPadding, overflow }),
+          variants({ width, verticalPadding, overflow }),
+          "space-y-(--gap-mobile) lg:space-y-(--gap-desktop)",
           hasBackground &&
             isBgForContent && ["bg-(--section-bg-color)", "px-4 sm:px-8"],
           containerClassName,
@@ -190,7 +176,7 @@ export const layoutInputs: InspectorGroup["inputs"] = [
     configs: {
       min: 0,
       max: 60,
-      step: 4,
+      step: 2,
       unit: "px",
     },
     defaultValue: 20,
