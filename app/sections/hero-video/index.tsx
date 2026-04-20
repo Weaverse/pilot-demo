@@ -158,7 +158,7 @@ export default function HeroVideo(props: HeroVideoProps) {
       return calculateVideoHeight(video, containerWidth);
     }
     // Fallback: calculate from video metadata if available
-    if (video?.width && video?.height) {
+    if (isBrowser && video?.width && video?.height) {
       // Use viewport width as estimate for container width
       const estimatedWidth = window.innerWidth;
       return calculateVideoHeight(video, estimatedWidth);
