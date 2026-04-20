@@ -29,15 +29,13 @@ export const schema = createSchema({
     },
   ],
   presets: {
-    gap: 32,
+    gap: 22,
     verticalPadding: "small",
     children: [
       {
         type: "heading",
         content: "You may also like",
-        size: "custom",
-        mobileSize: "lg",
-        desktopSize: "lg",
+        as: "h4",
         alignment: "left",
       },
       {
