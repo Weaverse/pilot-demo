@@ -86,7 +86,7 @@
     "zustand": "^5.0.12"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.4.12",
+    "@biomejs/biome": "^2.4.14",
     "@playwright/test": "1.59.1",
     "@shopify/cli": "^3.93.2",
     "@shopify/hydrogen-codegen": "0.3.3",
@@ -97,7 +97,7 @@
     "@total-typescript/ts-reset": "0.6.1",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
-    "@weaverse/biome": "5.7.3",
+    "@weaverse/biome": "5.7.4",
     "cross-env": "10.1.0",
     "tailwindcss": "^4.2.2",
     "ts-node": "10.9.2",
