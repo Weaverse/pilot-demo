@@ -134,6 +134,20 @@ export const Layout = withWeaverse(function RootLayout({
             }),
           }}
         />
+        {/*
+         * Pre-initialize window.Shopify as a configurable plain object BEFORE
+         * the Shopify account.js web component loads. account.js defines
+         * window.Shopify as non-configurable, which later breaks Hydrogen's
+         * <ShopifyAnalytics> when it calls Object.defineProperty(window, 'Shopify', ...).
+         * Setting it first via assignment ensures account.js reuses this object.
+         */}
+        <script
+          nonce={nonce}
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{
+            __html: "window.Shopify = window.Shopify || {};",
+          }}
+        />
         <link rel="stylesheet" href={styles} />
         <Meta />
         <Links />
