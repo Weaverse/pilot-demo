@@ -19,9 +19,11 @@ import {
 } from "react-router";
 import type { ThemeSettings } from "~/types/weaverse";
 import { loadCriticalData, loadDeferredData } from "./.server/root";
+import { CartStoreSync } from "./components/cart/store";
 import { Footer } from "./components/layout/footer";
 import { Header } from "./components/layout/header";
 import { ScrollingAnnouncement } from "./components/layout/scrolling-announcement";
+import { ConsentBanner } from "./components/root/consent-banner";
 import { CustomAnalytics } from "./components/root/custom-analytics";
 import { GenericError } from "./components/root/generic-error";
 import { GlobalLoading } from "./components/root/global-loading";
@@ -152,10 +154,37 @@ export const Layout = withWeaverse(function RootLayout({
         <Meta />
         <Links />
         <GlobalStyle />
+        {/*
+         * Shopify Storefront Web Components are split across two disjoint
+         * feature bundles (NOT umbrella vs per-component):
+         *   web-components.js          → <shopify-store>, <shopify-cart>,
+         *                                 <shopify-catalog>, <shopify-context>,
+         *                                 <shopify-data>, <shopify-media>, …
+         *   web-components/account.js  → <shopify-account>,
+         *                                 <shopify-customer-account-data>
+         *
+         * <shopify-account> is rendered inside <shopify-store> in this header
+         * so both bundles must be loaded. account.js does dynamic-import a
+         * chunked store-*.js to register <shopify-store>, but the chunk
+         * arrives AFTER <shopify-account>'s connectedCallback fires, which
+         * emits the visible warning
+         *   [shopify-account] <shopify-store> custom element is not registered
+         * and the account widget renders an empty slot.
+         *
+         * Use `defer` (not `async`): module scripts execute in document order
+         * with defer, which is required — if account.js runs before
+         * web-components.js, the same warning fires.
+         */}
+        <script
+          type="module"
+          src="https://cdn.shopify.com/storefront/web-components.js"
+          defer
+          nonce={nonce}
+        />
         <script
           type="module"
           src="https://cdn.shopify.com/storefront/web-components/account.js"
-          async
+          defer
           nonce={nonce}
         />
       </head>
@@ -173,6 +202,7 @@ export const Layout = withWeaverse(function RootLayout({
             shop={data.shop}
             consent={data.consent}
           >
+            <CartStoreSync />
             <TooltipProvider disableHoverableContent>
               <div
                 className="flex min-h-screen flex-col"
@@ -192,6 +222,7 @@ export const Layout = withWeaverse(function RootLayout({
               </div>
               {shouldShowNewsletterPopup && <NewsletterPopup />}
             </TooltipProvider>
+            <ConsentBanner />
             <CustomAnalytics />
           </Analytics.Provider>
         ) : (

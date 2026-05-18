@@ -8,7 +8,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { CartForm, Money, type OptimisticCart } from "@shopify/hydrogen";
 import { useThemeSettings } from "@weaverse/hydrogen";
 import clsx from "clsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useFetcher } from "react-router";
 import type { CartApiQueryFragment } from "storefront-api.generated";
 import { Button } from "~/components/button";
@@ -17,12 +17,14 @@ import { Skeleton } from "~/components/skeleton";
 import { Spinner } from "~/components/spinner";
 import type { CartLayoutType } from "~/types/others";
 import type { ThemeSettings } from "~/types/weaverse";
+import { appendForwardedAttribution } from "~/utils/checkout-attribution";
 import { cn } from "~/utils/cn";
 import {
   DiscountDialog,
   GiftCardDialog,
   NoteDialog,
 } from "./cart-summary-actions";
+import { useCartFetcherSync } from "./store";
 
 export function CartSummary({
   cart,
@@ -46,6 +48,15 @@ export function CartSummary({
   const [removingGiftCard, setRemovingGiftCard] = useState<string | null>(null);
   const dcRemoveFetcher = useFetcher({ key: "discount-code-remove" });
   const gcRemoveFetcher = useFetcher({ key: "gift-card-remove" });
+  // Line removal submits with this stable fetcherKey. The CartLineItem that
+  // owns the trash button unmounts the moment the line is optimistically
+  // spliced out, so its own fetcher response would be lost. Reading the keyed
+  // fetcher here (CartSummary stays mounted while the cart has items) captures
+  // the authoritative post-remove cart — including the updated cost.
+  const lineRemoveFetcher = useFetcher({ key: "cart-line-remove" });
+  useCartFetcherSync(dcRemoveFetcher);
+  useCartFetcherSync(gcRemoveFetcher);
+  useCartFetcherSync(lineRemoveFetcher);
   const {
     cost,
     discountCodes,
@@ -55,11 +66,32 @@ export function CartSummary({
     note,
   } = cart;
 
+  // Append ad-attribution params from the current storefront URL onto
+  // the checkout URL so Shopify's built-in tracking on the checkout
+  // subdomain sees consistent last-click identifiers (gclid, fbclid,
+  // utm_*, …). The initial render uses the unmodified checkoutUrl so
+  // SSR + client first-paint match; once the browser hydrates we swap
+  // in the enhanced URL via state. Server-side direct redirects (the
+  // Buy-now flow in app/routes/cart/lines.tsx) handle this server-side
+  // and don't go through this component.
+  const [enhancedCheckoutUrl, setEnhancedCheckoutUrl] = useState(checkoutUrl);
+  // biome-ignore lint/correctness/useExhaustiveDependencies: recompute whenever the underlying checkoutUrl changes
+  useEffect(() => {
+    if (typeof window === "undefined" || !checkoutUrl) {
+      setEnhancedCheckoutUrl(checkoutUrl);
+      return;
+    }
+    setEnhancedCheckoutUrl(
+      appendForwardedAttribution(checkoutUrl, window.location.search),
+    );
+  }, [checkoutUrl]);
+
   // Show loading state for optimistic line item changes or pending cart actions
   const isCartUpdating =
     isOptimistic ||
     dcRemoveFetcher.state !== "idle" ||
-    gcRemoveFetcher.state !== "idle";
+    gcRemoveFetcher.state !== "idle" ||
+    lineRemoveFetcher.state !== "idle";
   return (
     <div
       className={clsx(
@@ -239,7 +271,7 @@ export function CartSummary({
       )}
       {checkoutUrl && (
         <div className="mt-2 flex flex-col gap-3">
-          <a href={checkoutUrl} target="_self">
+          <a href={enhancedCheckoutUrl} target="_self">
             <Button className="w-full">
               <span>{checkoutButtonText || "Continue to Checkout"}</span>
               {layout === "drawer" && (
