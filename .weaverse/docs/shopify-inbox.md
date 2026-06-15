@@ -94,9 +94,26 @@ By default the widget uses a black icon button anchored bottom-right. To customi
 | `text` | `chat_with_us` | `chat_with_us`, `assistance`, `contact`, `help`, `support`, `live_chat`, `message_us`, `need_help`, `no_text` |
 | `icon` | `chat_bubble` | `chat_bubble`, `agent`, `speech_bubble`, `text_message`, `email`, `hand_wave`, `lifebuoy`, `paper_plane`, `service_bell`, `smiley_face`, `question_mark`, `team`, `no_icon` |
 
+## Opening the chat from a button
+
+Pilot ships a **Contact us** Weaverse section ([`app/sections/contact-us/`](../../app/sections/contact-us)) whose **Message us button** child opens the Inbox widget on click. Add it to any page in Weaverse Studio — it needs no configuration beyond `PUBLIC_SHOPIFY_INBOX_SHOP_ID`.
+
+To open the chat from your own component, import the helper:
+
+```tsx
+import { openShopifyInbox } from "~/components/shopify-inbox";
+
+<button type="button" onClick={openShopifyInbox}>
+  Message us
+</button>;
+```
+
+`openShopifyInbox()` opens the widget whatever state it is in: it clicks the loader's placeholder bubble (`#dummy-chat-button`, inside the same-origin `#dummy-chat-button-iframe`) for first-time visitors, or the `[data-spec="toggle-button"]` launcher inside the `<inbox-online-store-chat>` web component's shadow root once the full widget has loaded (skipping the click when the chat is already open, since that launcher toggles). It returns `true` when a launcher was found and clicked or the chat is already open, `false` otherwise (the widget has not rendered yet, or Inbox is not configured). These selectors are **Shopify-internal and undocumented** — they can change when Shopify updates the chat widget.
+
 ## Limitations
 
 - **Localhost:** Shopify's bot protection blocks the widget on `localhost`. The loader `<script>` is still injected (after `load`), but the chat UI will not initialize. Verify on a deployed (staging/production) domain.
+- **No programmatic send or pre-fill:** there is no supported API to send or pre-fill a message from the storefront. The chat composer runs in a Shopify-hosted, cross-origin frame, and the real send path is an internal, session-bound `postMessage` the widget mints after its own identity/bot checks. Opening the widget (`openShopifyInbox()`) is the only durable programmatic action.
 
 ## Content Security Policy
 
