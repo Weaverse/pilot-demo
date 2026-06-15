@@ -1,4 +1,3 @@
-import { XIcon } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { useThemeSettings } from "@weaverse/hydrogen";
@@ -6,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useFetcher, useLocation, useRouteLoaderData } from "react-router";
 import { Banner } from "~/components/banner";
 import { Button } from "~/components/button";
+import { Icon } from "~/components/icon";
 import { Image } from "~/components/image";
 import { useWeaverseStudioCheck } from "~/hooks/use-weaverse-studio-check";
 import type { RootLoader } from "~/root";
@@ -67,17 +67,38 @@ export function NewsletterPopup() {
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: just need to run once
   useEffect(() => {
-    let timer: ReturnType<typeof setTimeout> | null = null;
-    if (!isDesignMode) {
-      const isDismissed = localStorage.getItem(POPUP_DISMISSED_KEY) === "true";
-      if (isDismissed) {
-        return;
-      }
-      timer = setTimeout(() => {
-        setOpen(true);
-      }, newsletterPopupDelay * 1000);
+    if (isDesignMode) {
+      return;
     }
-    return () => clearTimeout(timer);
+    if (localStorage.getItem(POPUP_DISMISSED_KEY) === "true") {
+      return;
+    }
+    // Defer the popup until the visitor first engages (scroll/pointer/key/
+    // touch), then honor the configured delay. A newsletter popup that covers
+    // the hero during the initial render is an intrusive interstitial: it hurts
+    // perceived load (the popup becomes the last-painted content) and is poor
+    // UX. Gating on first interaction mirrors the GTM defer in
+    // custom-analytics.tsx and only shows the popup to engaged visitors.
+    let timer: ReturnType<typeof setTimeout> | null = null;
+    const intentEvents = ["pointerdown", "keydown", "touchstart", "scroll"];
+    function start() {
+      cleanup();
+      timer = setTimeout(() => setOpen(true), newsletterPopupDelay * 1000);
+    }
+    function cleanup() {
+      for (const event of intentEvents) {
+        window.removeEventListener(event, start);
+      }
+    }
+    for (const event of intentEvents) {
+      window.addEventListener(event, start, { once: true, passive: true });
+    }
+    return () => {
+      cleanup();
+      if (timer) {
+        window.clearTimeout(timer);
+      }
+    };
   }, []);
 
   // Re-open popup when settings change in design mode
@@ -144,7 +165,7 @@ export function NewsletterPopup() {
                 className="absolute top-3 right-3 z-10 flex h-7 w-7 items-center justify-center rounded-2xl bg-white/80 border border-gray-300 backdrop-blur transition-colors hover:bg-gray-100 focus-visible:outline-0"
                 aria-label="Close"
               >
-                <XIcon size={14} />
+                <Icon name="x" size={14} />
               </button>
             </Dialog.Close>
 
