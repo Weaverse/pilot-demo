@@ -2,6 +2,8 @@ import * as remixBuild from "virtual:react-router/server-build"; // Virtual entr
 import { storefrontRedirect } from "@shopify/hydrogen";
 import { createRequestHandler } from "@shopify/hydrogen/oxygen";
 import { createHydrogenRouterContext } from "~/.server/context";
+import { marketAwareRedirect } from "~/.server/market-redirect";
+import { isUnsupportedMarketPath } from "~/utils/locale";
 
 /**
  * Export a fetch handler in module format.
@@ -29,6 +31,20 @@ export default {
         getLoadContext: () => hydrogenContext,
       });
 
+      /**
+       * A market-shaped prefix we do not sell in (`/en-xx/products/hoodie`)
+       * must not resolve. `resolveLocale` falls back to the default market so
+       * link and sitemap helpers never throw, but serving that fallback to a
+       * visitor would publish the entire catalogue at unlimited non-canonical
+       * URLs. Refusing here covers every route, including `.data` requests,
+       * rather than asking each loader to remember.
+       */
+      const requestUrl = new URL(request.url);
+
+      if (isUnsupportedMarketPath(requestUrl.pathname)) {
+        return new Response("Not Found", { status: 404 });
+      }
+
       const response = await handleRequest(request);
 
       if (hydrogenContext.session.isPending) {
@@ -40,17 +56,17 @@ export default {
 
       if (response.status === 404) {
         /**
-         * Check for redirects only when there's a 404 from the app.
-         * If the redirect doesn't exist, then `storefrontRedirect`
-         * will pass through the 404 response.
+         * Check for redirects only when there's a 404 from the app. If no
+         * redirect exists, `storefrontRedirect` passes the 404 through.
          */
-        return storefrontRedirect({
-          request,
-          response,
-          storefront: hydrogenContext.storefront,
-        });
+        return marketAwareRedirect(request, response, (lookupRequest) =>
+          storefrontRedirect({
+            request: lookupRequest,
+            response,
+            storefront: hydrogenContext.storefront,
+          }),
+        );
       }
-
       return response;
     } catch (error) {
       console.error(error);

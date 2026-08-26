@@ -4,13 +4,15 @@ import {
   Money,
   Pagination,
 } from "@shopify/hydrogen";
+import { useTranslation } from "@weaverse/hydrogen";
 import type {
   CustomerOrdersFragment,
   OrderItemFragment,
 } from "customer-account-api.generated";
 import type * as React from "react";
 import type { LoaderFunctionArgs } from "react-router";
-import { Link, type MetaFunction, useLoaderData } from "react-router";
+import { type MetaFunction, useLoaderData } from "react-router";
+import Link from "~/components/link";
 import { Section } from "~/components/section";
 
 // https://shopify.dev/docs/api/customer/latest/objects/Order
@@ -142,6 +144,7 @@ function PaginatedOrders<NodesType>({
   children: (props: { node: NodesType; index: number }) => React.ReactNode;
   resourcesClassName?: string;
 }) {
+  const { t } = useTranslation();
   return (
     <Pagination connection={connection}>
       {({ nodes, isLoading, PreviousLink, NextLink }) => {
@@ -152,7 +155,11 @@ function PaginatedOrders<NodesType>({
         return (
           <div className="space-y-6">
             <PreviousLink className="inline-block text-primary text-sm underline-offset-4 hover:underline">
-              {isLoading ? "Loading..." : <span>↑ Load previous</span>}
+              {isLoading ? (
+                t("pagination.loading")
+              ) : (
+                <span>{t("pagination.loadPrevious")}</span>
+              )}
             </PreviousLink>
             {resourcesClassName ? (
               <div className={resourcesClassName}>{resourcesMarkup}</div>
@@ -160,7 +167,11 @@ function PaginatedOrders<NodesType>({
               <div className="space-y-4">{resourcesMarkup}</div>
             )}
             <NextLink className="inline-block text-primary text-sm underline-offset-4 hover:underline">
-              {isLoading ? "Loading..." : <span>Load more ↓</span>}
+              {isLoading ? (
+                t("pagination.loading")
+              ) : (
+                <span>{t("pagination.loadMore")}</span>
+              )}
             </NextLink>
           </div>
         );

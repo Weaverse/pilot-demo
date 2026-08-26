@@ -1,10 +1,10 @@
-import type { SeoConfig } from "@shopify/hydrogen";
-import { AnalyticsPageType, getSeoMeta } from "@shopify/hydrogen";
+import { AnalyticsPageType } from "@shopify/hydrogen";
 import { getWeaverseSeoMeta, type PageType } from "@weaverse/hydrogen";
-import type { LoaderFunctionArgs, MetaFunction } from "react-router";
+import type { LoaderFunctionArgs, MetaArgs } from "react-router";
 import type { ShopQuery } from "storefront-api.generated";
 import { seoPayload } from "~/.server/seo";
 import { routeHeaders } from "~/utils/cache";
+import { seoMetaFromMatches, withWeaverseSeo } from "~/utils/seo";
 import { validateWeaverseData, WeaverseContent } from "~/weaverse";
 
 export const headers = routeHeaders;
@@ -47,13 +47,14 @@ export async function loader(args: LoaderFunctionArgs) {
   };
 }
 
-export const meta: MetaFunction<typeof loader> = ({ data }) => {
+export const meta = ({ data, matches }: MetaArgs<typeof loader>) => {
   // INDEX (real homepage) keeps the code-defined SEO — no Weaverse override.
-  // CUSTOM pages served by this route get their SEO from Weaverse.
-  if (data?.seo) {
-    return getSeoMeta(data.seo as SeoConfig);
-  }
-  return getWeaverseSeoMeta(data?.weaverseData);
+  // CUSTOM pages served by this route append theirs from Weaverse. Either way
+  // the matched payloads carry the market's canonical + hreflang alternates.
+  const routeSeo = seoMetaFromMatches(matches);
+  return data?.seo
+    ? routeSeo
+    : withWeaverseSeo(routeSeo, getWeaverseSeoMeta(data?.weaverseData));
 };
 export default function Homepage() {
   return <WeaverseContent />;

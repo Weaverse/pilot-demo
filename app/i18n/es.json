@@ -1,0 +1,228 @@
+{
+  "badge": {
+    "bestSeller": "Más vendido",
+    "new": "Nuevo",
+    "bundle": "Pack",
+    "soldOut": "Agotado",
+    "sale": "-[percentage] % de descuento"
+  },
+  "cart": {
+    "title": "Carrito",
+    "empty": {
+      "message": "Parece que aún no has añadido nada, ¡empecemos!",
+      "startShopping": "Empezar a comprar",
+      "shopBestSellers": "Ver los más vendidos"
+    },
+    "summary": {
+      "orderSummary": "Resumen del pedido",
+      "estimatedTotal": "Total estimado:",
+      "taxesDiscountsShipping": "Impuestos, descuentos y {{link}} se calculan al finalizar la compra.",
+      "shipping": "gastos de envío",
+      "viewCart": "Ver carrito"
+    },
+    "actions": {
+      "addNote": "Añadir una nota",
+      "discountCode": "Añadir un código de descuento",
+      "giftCard": "Canjear una tarjeta regalo",
+      "checkout": "Continuar con el pago",
+      "cancel": "Cancelar",
+      "saveNote": "Guardar nota",
+      "apply": "Aplicar",
+      "redeem": "Canjear"
+    },
+    "messages": {
+      "noteSaved": "Nota guardada correctamente 🎉",
+      "discountApplied": "Descuento aplicado correctamente 🎉",
+      "discountInvalid": "Código de descuento no válido.",
+      "giftCardApplied": "Tarjeta regalo aplicada correctamente 🎉",
+      "giftCardInvalid": "Código de tarjeta regalo no válido."
+    },
+    "placeholder": {
+      "note": "Añade instrucciones o notas especiales para tu pedido...",
+      "discountCode": "Código de descuento",
+      "giftCardCode": "Código de tarjeta regalo"
+    },
+    "bestSellers": "Más de nuestros productos más vendidos"
+  },
+  "product": {
+    "addToCart": "Añadir al carrito",
+    "soldOut": "Agotado",
+    "from": "Desde",
+    "viewFullDetails": "Ver todos los detalles →",
+    "quickShop": "Compra rápida",
+    "add": "Añadir",
+    "remove": "Quitar",
+    "pictureOf": "Imagen de {{name}}",
+    "secondPictureOf": "Segunda imagen de {{name}}"
+  },
+  "newsletter": {
+    "popup": {
+      "heading": "¡No te pierdas nada!",
+      "description": "Suscríbete a nuestra newsletter y recibe ofertas exclusivas, novedades y mucho más.",
+      "buttonText": "Consigue un 15 % en tu primer pedido",
+      "placeholder": "Introduce tu correo electrónico"
+    }
+  },
+  "search": {
+    "title": "Buscar",
+    "placeholder": "Busca en nuestra tienda...",
+    "enterKeyword": "Introduce una palabra clave",
+    "viewAllResults": "Ver todos los resultados",
+    "noResults": "Sin resultados para «{{term}}», prueba con otra búsqueda.",
+    "noResultsShort": "No se han encontrado resultados para",
+    "trendingProducts": "Productos en tendencia",
+    "problemLoadingProducts": "Hubo un problema al cargar los productos relacionados",
+    "popularKeywords": "gafas de sol, sombreros, chaquetas, zapatos",
+    "popularSearches": "Búsquedas populares:"
+  },
+  "footer": {
+    "bio": "<p>Somos un equipo de diseñadores, desarrolladores y creativos apasionados por crear productos bonitos y funcionales.</p>",
+    "addressTitle": "NUESTRA TIENDA",
+    "storeAddress": "301 Front St W, Toronto, ON M5V 2T6, Canadá",
+    "storeEmail": "contact@my-store.com",
+    "newsletterTitle": "SIGAMOS EN CONTACTO",
+    "newsletterDescription": "Novedades e inspiración en tu bandeja de entrada, cada semana.",
+    "newsletterPlaceholder": "Introduce tu correo electrónico",
+    "newsletterButtonText": "Enviar",
+    "copyright": "© 2024 Weaverse. Todos los derechos reservados.",
+    "email": "Correo electrónico:",
+    "newsletterSuccess": "¡Gracias por suscribirte! 🎉",
+    "newsletterError": "Se ha producido un error al suscribirte."
+  },
+  "announcement": {
+    "topbarText": "<p>Envío gratis en pedidos superiores a 50 $</p><p>Novedades cada semana</p><p>Devoluciones sin complicaciones en 30 días</p><p>Suscríbete y consigue un 10 % en tu primer pedido</p>"
+  },
+  "pagination": {
+    "loading": "Cargando...",
+    "loadPrevious": "↑ Cargar anteriores",
+    "loadMore": "↓ Cargar más"
+  },
+  "accessibility": {
+    "closeCartDrawer": "Cerrar el carrito",
+    "close": "Cerrar",
+    "removeGiftCard": "Quitar el código de tarjeta regalo {{code}}",
+    "removeDiscount": "Quitar el código de descuento {{code}}",
+    "predictiveSearch": "Búsqueda predictiva",
+    "quickShopModal": "Ventana de compra rápida",
+    "skipToContent": "Saltar al contenido"
+  },
+  "account": {
+    "signOut": "Cerrar sesión",
+    "na": "N/D",
+    "details": {
+      "title": "Cuenta",
+      "name": "Nombre",
+      "phone": "Número de teléfono",
+      "email": "Correo electrónico",
+      "editLink": "Editar los datos de la cuenta"
+    },
+    "orders": {
+      "title": "Pedidos",
+      "empty": "Todavía no has realizado ningún pedido.",
+      "orderImage": "Imagen del pedido",
+      "more": "más",
+      "orderId": "ID del pedido",
+      "orderNo": "N.º de pedido",
+      "orderDate": "Fecha del pedido",
+      "fulfillmentStatus": "Estado del envío",
+      "viewDetails": "Ver detalles",
+      "startShopping": "Empezar a comprar →",
+      "loading": "Cargando...",
+      "loadPrevious": "Cargar anteriores",
+      "loadMore": "Cargar más",
+      "viewOrder": "Ver pedido →"
+    },
+    "address": {
+      "title": "Libreta de direcciones",
+      "empty": "Todavía no has guardado ninguna dirección.",
+      "add": "Añadir una dirección",
+      "default": "Predeterminada",
+      "edit": "Editar",
+      "remove": "Eliminar"
+    },
+    "edit": {
+      "title": "Editar cuenta",
+      "firstName": "Nombre",
+      "lastName": "Apellidos",
+      "cancel": "Cancelar",
+      "save": "Guardar",
+      "saving": "Guardando"
+    },
+    "addressForm": {
+      "titleAdd": "Añadir nueva dirección",
+      "titleEdit": "Editar dirección",
+      "company": "Empresa",
+      "address1": "Dirección línea 1",
+      "address1Required": "Dirección línea 1*",
+      "address2": "Dirección línea 2",
+      "city": "Ciudad",
+      "state": "Estado / Provincia",
+      "statePlaceholder": "Estado / Provincia (zoneCode)",
+      "zip": "Código postal",
+      "country": "País",
+      "countryPlaceholder": "Código de país (territorio)",
+      "phone": "Teléfono",
+      "setDefault": "Establecer como dirección predeterminada"
+    }
+  },
+  "collection": {
+    "productsCount": "{{count}} productos",
+    "filter": "Filtrar",
+    "filters": "Filtros",
+    "closeFilters": "Cerrar el panel de filtros",
+    "sortBy": "Ordenar por:",
+    "sort": "Ordenar",
+    "sortOptions": {
+      "featured": "Destacados",
+      "relevance": "Relevancia",
+      "priceLowHigh": "Precio (de menor a mayor)",
+      "priceHighLow": "Precio (de mayor a menor)",
+      "bestSelling": "Más vendidos",
+      "newest": "Novedades"
+    },
+    "clearAllFilters": "Borrar todos los filtros",
+    "clearAllFiltersAriaLabel": "Borrar todos los filtros aplicados",
+    "noProductsMatchedFilters": "Ningún producto coincide con tus filtros.",
+    "priceRange": {
+      "minPrice": "Precio mínimo",
+      "maxPrice": "Precio máximo",
+      "to": "a"
+    }
+  },
+  "productDetails": {
+    "description": "Descripción",
+    "shipping": "Envío",
+    "returns": "Devoluciones",
+    "learnMore": "Más información"
+  },
+  "review": {
+    "writeYourReview": "Escribe tu reseña",
+    "shareExperience": "Comparte tu experiencia con otros clientes",
+    "rating": "Valoración",
+    "yourName": "Tu nombre",
+    "enterName": "Introduce tu nombre",
+    "emailAddress": "Correo electrónico",
+    "enterEmail": "Introduce tu correo electrónico",
+    "reviewTitle": "Título de la reseña",
+    "giveTitle": "Ponle un título a tu reseña",
+    "yourReview": "Tu reseña",
+    "shareExperienceProduct": "Comparte tu experiencia con este producto",
+    "cancel": "Cancelar",
+    "submit": "Enviar reseña",
+    "submitting": "Enviando...",
+    "selectRating": "Selecciona una valoración",
+    "successTitle": "¡Reseña enviada correctamente!",
+    "successMessage": "Gracias por tus comentarios. Tu reseña se está procesando y se publicará en unos minutos.",
+    "writeAnother": "Escribir otra reseña",
+    "errorTitle": "Error al enviar",
+    "errorMessage": "Se ha producido un error al enviar tu reseña. Inténtalo de nuevo.",
+    "tryAgain": "Intentar de nuevo",
+    "imageAlt": "Imagen de la reseña {{index}}",
+    "imageView": "Ver",
+    "imageGalleryAriaLabel": "Galería de imágenes de la reseña",
+    "closeImageAriaLabel": "Cerrar imagen",
+    "previousImageAriaLabel": "Imagen anterior",
+    "nextImageAriaLabel": "Imagen siguiente",
+    "reviewImageAlt": "Imagen de la reseña"
+  }
+}

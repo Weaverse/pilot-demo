@@ -1,0 +1,228 @@
+{
+  "badge": {
+    "bestSeller": "Bestseller",
+    "new": "Neu",
+    "bundle": "Set",
+    "soldOut": "Ausverkauft",
+    "sale": "-[percentage]% Rabatt"
+  },
+  "cart": {
+    "title": "Warenkorb",
+    "empty": {
+      "message": "Sie haben noch nichts hinzugefügt – legen wir los!",
+      "startShopping": "Jetzt einkaufen",
+      "shopBestSellers": "Bestseller entdecken"
+    },
+    "summary": {
+      "orderSummary": "Bestellübersicht",
+      "estimatedTotal": "Voraussichtliche Summe:",
+      "taxesDiscountsShipping": "Steuern, Rabatte und {{link}} werden beim Checkout berechnet.",
+      "shipping": "Versandkosten",
+      "viewCart": "Warenkorb ansehen"
+    },
+    "actions": {
+      "addNote": "Notiz hinzufügen",
+      "discountCode": "Rabattcode hinzufügen",
+      "giftCard": "Geschenkkarte einlösen",
+      "checkout": "Weiter zur Kasse",
+      "cancel": "Abbrechen",
+      "saveNote": "Notiz speichern",
+      "apply": "Anwenden",
+      "redeem": "Einlösen"
+    },
+    "messages": {
+      "noteSaved": "Notiz erfolgreich gespeichert 🎉",
+      "discountApplied": "Rabatt erfolgreich angewendet 🎉",
+      "discountInvalid": "Ungültiger Rabattcode.",
+      "giftCardApplied": "Geschenkkarte erfolgreich eingelöst 🎉",
+      "giftCardInvalid": "Ungültiger Geschenkkartencode."
+    },
+    "placeholder": {
+      "note": "Besondere Wünsche oder Hinweise zu Ihrer Bestellung ...",
+      "discountCode": "Rabattcode",
+      "giftCardCode": "Geschenkkartencode"
+    },
+    "bestSellers": "Mehr aus unseren Bestsellern"
+  },
+  "product": {
+    "addToCart": "In den Warenkorb",
+    "soldOut": "Ausverkauft",
+    "from": "Ab",
+    "viewFullDetails": "Alle Details ansehen →",
+    "quickShop": "Schnellansicht",
+    "add": "Hinzufügen",
+    "remove": "Entfernen",
+    "pictureOf": "Bild von {{name}}",
+    "secondPictureOf": "Zweites Bild von {{name}}"
+  },
+  "newsletter": {
+    "popup": {
+      "heading": "Bleiben Sie auf dem Laufenden!",
+      "description": "Abonnieren Sie unseren Newsletter und erhalten Sie exklusive Angebote, Neuheiten und mehr.",
+      "buttonText": "15 % Rabatt auf Ihre erste Bestellung",
+      "placeholder": "E-Mail-Adresse eingeben"
+    }
+  },
+  "search": {
+    "title": "Suche",
+    "placeholder": "Shop durchsuchen ...",
+    "enterKeyword": "Suchbegriff eingeben",
+    "viewAllResults": "Alle Ergebnisse ansehen",
+    "noResults": "Keine Ergebnisse für „{{term}}“, versuchen Sie eine andere Suche.",
+    "noResultsShort": "Keine Ergebnisse gefunden für",
+    "trendingProducts": "Beliebte Produkte",
+    "problemLoadingProducts": "Ähnliche Produkte konnten nicht geladen werden",
+    "popularKeywords": "Sonnenbrillen, Hüte, Jacken, Schuhe",
+    "popularSearches": "Beliebte Suchanfragen:"
+  },
+  "footer": {
+    "bio": "<p>Wir sind ein Team aus Designerinnen, Entwicklern und Kreativen mit einer Leidenschaft für schöne und funktionale Produkte.</p>",
+    "addressTitle": "UNSER GESCHÄFT",
+    "storeAddress": "301 Front St W, Toronto, ON M5V 2T6, Kanada",
+    "storeEmail": "contact@my-store.com",
+    "newsletterTitle": "BLEIBEN SIE IN KONTAKT",
+    "newsletterDescription": "Neuigkeiten und Inspiration – jede Woche in Ihrem Postfach.",
+    "newsletterPlaceholder": "Bitte E-Mail-Adresse eingeben",
+    "newsletterButtonText": "Senden",
+    "copyright": "© 2024 Weaverse. Alle Rechte vorbehalten.",
+    "email": "E-Mail:",
+    "newsletterSuccess": "Danke für Ihre Anmeldung! 🎉",
+    "newsletterError": "Bei der Anmeldung ist ein Fehler aufgetreten."
+  },
+  "announcement": {
+    "topbarText": "<p>Kostenloser Versand ab 50 $</p><p>Jede Woche neue Produkte</p><p>30 Tage unkompliziertes Rückgaberecht</p><p>Anmelden und 10 % auf die erste Bestellung sichern</p>"
+  },
+  "pagination": {
+    "loading": "Wird geladen ...",
+    "loadPrevious": "↑ Vorherige laden",
+    "loadMore": "↓ Mehr laden"
+  },
+  "accessibility": {
+    "closeCartDrawer": "Warenkorb schließen",
+    "close": "Schließen",
+    "removeGiftCard": "Geschenkkartencode {{code}} entfernen",
+    "removeDiscount": "Rabattcode {{code}} entfernen",
+    "predictiveSearch": "Sucheingabe mit Vorschlägen",
+    "quickShopModal": "Schnellansicht-Dialog",
+    "skipToContent": "Zum Inhalt springen"
+  },
+  "account": {
+    "signOut": "Abmelden",
+    "na": "K. A.",
+    "details": {
+      "title": "Konto",
+      "name": "Name",
+      "phone": "Telefonnummer",
+      "email": "E-Mail-Adresse",
+      "editLink": "Kontodaten bearbeiten"
+    },
+    "orders": {
+      "title": "Bestellungen",
+      "empty": "Sie haben noch keine Bestellungen aufgegeben.",
+      "orderImage": "Bestellbild",
+      "more": "weitere",
+      "orderId": "Bestell-ID",
+      "orderNo": "Bestellnr.",
+      "orderDate": "Bestelldatum",
+      "fulfillmentStatus": "Versandstatus",
+      "viewDetails": "Details ansehen",
+      "startShopping": "Jetzt einkaufen →",
+      "loading": "Wird geladen ...",
+      "loadPrevious": "Vorherige laden",
+      "loadMore": "Mehr laden",
+      "viewOrder": "Bestellung ansehen →"
+    },
+    "address": {
+      "title": "Adressbuch",
+      "empty": "Sie haben noch keine Adressen gespeichert.",
+      "add": "Adresse hinzufügen",
+      "default": "Standard",
+      "edit": "Bearbeiten",
+      "remove": "Entfernen"
+    },
+    "edit": {
+      "title": "Konto bearbeiten",
+      "firstName": "Vorname",
+      "lastName": "Nachname",
+      "cancel": "Abbrechen",
+      "save": "Speichern",
+      "saving": "Wird gespeichert"
+    },
+    "addressForm": {
+      "titleAdd": "Neue Adresse hinzufügen",
+      "titleEdit": "Adresse bearbeiten",
+      "company": "Firma",
+      "address1": "Adresszeile 1",
+      "address1Required": "Adresszeile 1*",
+      "address2": "Adresszeile 2",
+      "city": "Stadt",
+      "state": "Bundesland / Provinz",
+      "statePlaceholder": "Bundesland / Provinz (zoneCode)",
+      "zip": "Postleitzahl",
+      "country": "Land",
+      "countryPlaceholder": "Ländercode (Region)",
+      "phone": "Telefon",
+      "setDefault": "Als Standardadresse festlegen"
+    }
+  },
+  "collection": {
+    "productsCount": "{{count}} Produkte",
+    "filter": "Filter",
+    "filters": "Filter",
+    "closeFilters": "Filter-Panel schließen",
+    "sortBy": "Sortieren nach:",
+    "sort": "Sortieren",
+    "sortOptions": {
+      "featured": "Empfohlen",
+      "relevance": "Relevanz",
+      "priceLowHigh": "Preis (aufsteigend)",
+      "priceHighLow": "Preis (absteigend)",
+      "bestSelling": "Meistverkauft",
+      "newest": "Neueste"
+    },
+    "clearAllFilters": "Alle Filter zurücksetzen",
+    "clearAllFiltersAriaLabel": "Alle aktiven Filter zurücksetzen",
+    "noProductsMatchedFilters": "Keine Produkte entsprechen Ihren Filtern.",
+    "priceRange": {
+      "minPrice": "Mindestpreis",
+      "maxPrice": "Höchstpreis",
+      "to": "bis"
+    }
+  },
+  "productDetails": {
+    "description": "Beschreibung",
+    "shipping": "Versand",
+    "returns": "Rücksendungen",
+    "learnMore": "Mehr erfahren"
+  },
+  "review": {
+    "writeYourReview": "Bewertung schreiben",
+    "shareExperience": "Teilen Sie Ihre Erfahrung mit anderen Kundinnen und Kunden",
+    "rating": "Bewertung",
+    "yourName": "Ihr Name",
+    "enterName": "Namen eingeben",
+    "emailAddress": "E-Mail-Adresse",
+    "enterEmail": "E-Mail-Adresse eingeben",
+    "reviewTitle": "Titel der Bewertung",
+    "giveTitle": "Geben Sie Ihrer Bewertung einen Titel",
+    "yourReview": "Ihre Bewertung",
+    "shareExperienceProduct": "Teilen Sie Ihre Erfahrung mit diesem Produkt",
+    "cancel": "Abbrechen",
+    "submit": "Bewertung absenden",
+    "submitting": "Wird gesendet ...",
+    "selectRating": "Bitte wählen Sie eine Bewertung",
+    "successTitle": "Bewertung erfolgreich gesendet!",
+    "successMessage": "Danke für Ihr Feedback. Ihre Bewertung wird im Hintergrund verarbeitet und in wenigen Minuten veröffentlicht.",
+    "writeAnother": "Weitere Bewertung schreiben",
+    "errorTitle": "Senden fehlgeschlagen",
+    "errorMessage": "Beim Senden Ihrer Bewertung ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.",
+    "tryAgain": "Erneut versuchen",
+    "imageAlt": "Bewertungsbild {{index}}",
+    "imageView": "Ansehen",
+    "imageGalleryAriaLabel": "Bildergalerie der Bewertung",
+    "closeImageAriaLabel": "Bild schließen",
+    "previousImageAriaLabel": "Vorheriges Bild",
+    "nextImageAriaLabel": "Nächstes Bild",
+    "reviewImageAlt": "Bewertungsbild"
+  }
+}

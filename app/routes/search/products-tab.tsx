@@ -1,4 +1,5 @@
 import { Pagination } from "@shopify/hydrogen";
+import { useTranslation } from "@weaverse/hydrogen";
 import { useInView } from "react-intersection-observer";
 import type { SearchPageQuery } from "storefront-api.generated";
 import { Button } from "~/components/button";
@@ -17,6 +18,7 @@ export function ProductsTab({
   searchTerm,
 }: ProductsTabProps) {
   const { ref: inViewRef, inView } = useInView();
+  const { t } = useTranslation();
 
   if (productsCount === 0) {
     return <TabNoResults type="products" searchTerm={searchTerm} />;
@@ -37,7 +39,9 @@ export function ProductsTab({
           {hasPreviousPage && (
             <PreviousLink className="flex justify-center mb-8">
               <Button variant="outline">
-                {isLoading ? "Loading..." : "↑ Load previous"}
+                {isLoading
+                  ? t("pagination.loading")
+                  : t("pagination.loadPrevious")}
               </Button>
             </PreviousLink>
           )}
@@ -53,9 +57,7 @@ export function ProductsTab({
           />
           {hasNextPage && (
             <div ref={inViewRef} className="flex justify-center mt-8">
-              <Button variant="outline">
-                {isLoading ? "Loading..." : "Loading..."}
-              </Button>
+              <Button variant="outline">{t("pagination.loading")}</Button>
             </div>
           )}
         </>

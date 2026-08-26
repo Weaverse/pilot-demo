@@ -10,8 +10,7 @@ import {
   CART_MUTATION_FRAGMENT,
   CART_QUERY_FRAGMENT,
 } from "~/graphql/fragments";
-import type { I18nLocale } from "~/types/others";
-import { COUNTRIES } from "~/utils/const";
+import { resolveLocaleFromRequest, unauthorizedRedirect } from "~/utils/locale";
 import { components } from "~/weaverse/components";
 import { themeSchema } from "~/weaverse/schema.server";
 
@@ -40,6 +39,8 @@ export async function createHydrogenRouterContext(
     AppSession.init(request, [env.SESSION_SECRET]),
   ]);
 
+  const locale = resolveLocaleFromRequest(request);
+
   const hydrogenContext = createHydrogenContext(
     {
       env,
@@ -47,7 +48,14 @@ export async function createHydrogenRouterContext(
       cache,
       waitUntil,
       session,
-      i18n: getLocaleFromRequest(request),
+      i18n: locale,
+      customerAccount: {
+        // Hydrogen's default handler redirects to a fixed `/account/login`,
+        // dropping the market: a shopper bounced from `/de-de/account` would
+        // sign in on the US storefront. `authUrl` stays the registered,
+        // non-dynamic OAuth callback; only this in-app bounce is localized.
+        customAuthStatusHandler: () => unauthorizedRedirect(request, locale),
+      },
       cart: {
         queryFragment: CART_QUERY_FRAGMENT,
         mutateFragment: CART_MUTATION_FRAGMENT,
@@ -129,20 +137,4 @@ class AppSession implements HydrogenSession {
     this.isPending = false;
     return this.#sessionStorage.commitSession(this.#session);
   }
-}
-
-function getLocaleFromRequest(request: Request): I18nLocale {
-  const url = new URL(request.url);
-  let firstPathPart = `/${url.pathname.substring(1).split("/")[0].toLowerCase()}`;
-  firstPathPart = firstPathPart.replace(".data", "");
-
-  return COUNTRIES[firstPathPart]
-    ? {
-        ...COUNTRIES[firstPathPart],
-        pathPrefix: firstPathPart,
-      }
-    : {
-        ...COUNTRIES.default,
-        pathPrefix: "",
-      };
 }

@@ -1,10 +1,10 @@
-import { useThemeSettings } from "@weaverse/hydrogen";
+import { useTranslation } from "@weaverse/hydrogen";
 import { Fragment } from "react";
 import Link from "~/components/link";
-import type { ThemeSettings } from "~/types/weaverse";
 
 export function PopularKeywords() {
-  const { popularSearchKeywords } = useThemeSettings<ThemeSettings>();
+  const { t } = useTranslation();
+  const popularSearchKeywords = t("search.popularKeywords");
   if (!popularSearchKeywords?.length) {
     return null;
   }
@@ -15,7 +15,7 @@ export function PopularKeywords() {
 
   return (
     <div className="flex items-center justify-center text-body-subtle">
-      <span>Popular searches:</span>
+      <span>{t("search.popularSearches")}</span>
       {popularKeywords.map((search, ind) => (
         <Fragment key={search}>
           <Link

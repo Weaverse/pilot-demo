@@ -23,6 +23,7 @@ import { Button } from "~/components/button";
 import { Icon } from "~/components/icon";
 import Link from "~/components/link";
 import type { AccountOutletContext } from "~/routes/account/edit";
+import { localizedPathForRequest } from "~/utils/locale";
 import { doLogout } from "../auth/logout";
 import {
   CREATE_ADDRESS_MUTATION,
@@ -47,14 +48,14 @@ const ADDRESS_INPUT_KEYS: (keyof CustomerAddressInput)[] = [
   "company",
 ];
 
-export const action: ActionFunction = async ({ request, context, params }) => {
+export const action: ActionFunction = async ({ request, context }) => {
   const { customerAccount } = context;
   const formData = await request.formData();
 
   // Double-check current user is logged in.
   // Will throw a logout redirect if not.
   if (!(await customerAccount.isLoggedIn())) {
-    throw await doLogout(context);
+    throw await doLogout(context, request);
   }
 
   const addressId = formData.get("addressId");
@@ -79,9 +80,7 @@ export const action: ActionFunction = async ({ request, context, params }) => {
         deleteData?.customerAddressDelete?.userErrors?.[0]?.message,
       );
 
-      return redirect(
-        params?.locale ? `${params?.locale}/account` : "/account",
-      );
+      return redirect(localizedPathForRequest(request, "/account"));
     } catch (error: unknown) {
       return data(
         { formError: error instanceof Error ? error.message : "Unknown error" },
@@ -128,9 +127,7 @@ export const action: ActionFunction = async ({ request, context, params }) => {
         "Expected customer address to be created",
       );
 
-      return redirect(
-        params?.locale ? `${params?.locale}/account` : "/account",
-      );
+      return redirect(localizedPathForRequest(request, "/account"));
     } catch (error: unknown) {
       return data(
         { formError: error instanceof Error ? error.message : "Unknown error" },
@@ -160,9 +157,7 @@ export const action: ActionFunction = async ({ request, context, params }) => {
         updateData?.customerAddressUpdate?.userErrors?.[0]?.message,
       );
 
-      return redirect(
-        params?.locale ? `${params?.locale}/account` : "/account",
-      );
+      return redirect(localizedPathForRequest(request, "/account"));
     } catch (error: unknown) {
       return data(
         { formError: error instanceof Error ? error.message : "Unknown error" },

@@ -1,12 +1,12 @@
-import { useThemeSettings } from "@weaverse/hydrogen";
-import type { ThemeSettings } from "~/types/weaverse";
+import { useTranslation } from "@weaverse/hydrogen";
 
 export function PopularKeywords({
   onKeywordClick,
 }: {
   onKeywordClick: (keyword: string) => void;
 }) {
-  const { popularSearchKeywords } = useThemeSettings<ThemeSettings>();
+  const { t } = useTranslation();
+  const popularSearchKeywords = t("search.popularKeywords");
   if (!popularSearchKeywords?.length) {
     return null;
   }
@@ -18,7 +18,7 @@ export function PopularKeywords({
 
   return (
     <div className="flex items-center gap-2">
-      <span>Popular searches:</span>
+      <span>{t("search.popularSearches")}</span>
       <div className="flex flex-wrap gap-2">
         {popularKeywords.map((keyword, index) => (
           <button

@@ -1,17 +1,10 @@
 import { getSitemap } from "@shopify/hydrogen";
 import type { LoaderFunctionArgs } from "react-router";
-import { COUNTRIES } from "~/utils/const";
+import { DEFAULT_LOCALE } from "~/utils/locale";
 
 // Match Shopify's sitemap pagination size so page numbers in the sitemap
 // index (`sitemap/articles/1.xml`, `.../2.xml`, ...) stay consistent.
 const ARTICLES_PER_SITEMAP_PAGE = 250;
-
-const SITEMAP_LOCALES = Object.entries(COUNTRIES).map(([path, locale]) => ({
-  hreflang: `${locale.language}-${locale.country}`,
-  pathPrefix: path === "default" ? "" : path.toLowerCase(),
-}));
-
-const SITEMAP_HREFLANG_CODES = SITEMAP_LOCALES.map((locale) => locale.hreflang);
 
 const BLOGS_QUERY = `#graphql
   query SitemapBlogs($first: Int!, $after: String) {
@@ -155,11 +148,10 @@ async function articlesSitemap({
     .map((node) => {
       const canonicalPath = `/blogs/${node.blogHandle}/${node.handle}`;
       const loc = escapeXml(`${baseUrl}${canonicalPath}`);
-      const alternates = SITEMAP_LOCALES.map(
-        (locale) =>
-          `    <xhtml:link rel="alternate" hreflang="${escapeXml(locale.hreflang)}" href="${escapeXml(`${baseUrl}${locale.pathPrefix}${canonicalPath}`)}" />`,
-      ).join("\n");
-      return `  <url>\n    <loc>${loc}</loc>\n    <lastmod>${escapeXml(node.publishedAt)}</lastmod>\n    <changefreq>weekly</changefreq>\n${alternates}\n  </url>`;
+      // No `xhtml:link` alternates: an article handle is localized per market
+      // and an article may be unpublished in one, so swapping the prefix would
+      // advertise URLs that redirect or 404. See `isMarketInvariantPath`.
+      return `  <url>\n    <loc>${loc}</loc>\n    <lastmod>${escapeXml(node.publishedAt)}</lastmod>\n    <changefreq>weekly</changefreq>\n  </url>`;
     })
     .join("\n");
 
@@ -186,13 +178,14 @@ export async function loader({
     storefront,
     request,
     params,
-    locales: SITEMAP_HREFLANG_CODES,
-    getLink: ({ type, baseUrl, handle, locale }) => {
-      const configuredLocale = SITEMAP_LOCALES.find(
-        (item) => item.hreflang.toLowerCase() === locale?.toLowerCase(),
-      );
-      return `${baseUrl}${configuredLocale?.pathPrefix ?? ""}/${type}/${handle}`;
-    },
+    // Only the default market is listed. Passing every locale makes Hydrogen
+    // emit `hreflang` alternates by swapping the prefix onto one handle, but a
+    // handle is per-market data — Shopify localizes it, and a resource can be
+    // unpublished in a market — so those URLs may redirect or 404. A missing
+    // alternate costs discovery in that market; a wrong one tells search
+    // engines a page exists where it does not.
+    locales: [DEFAULT_LOCALE.hreflang],
+    getLink: ({ baseUrl, handle, type }) => `${baseUrl}/${type}/${handle}`,
   });
 
   response.headers.set("Cache-Control", `max-age=${60 * 60 * 24}`);

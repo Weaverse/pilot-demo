@@ -1,0 +1,228 @@
+{
+  "badge": {
+    "bestSeller": "Meilleure vente",
+    "new": "Nouveau",
+    "bundle": "Lot",
+    "soldOut": "Épuisé",
+    "sale": "-[percentage] % de remise"
+  },
+  "cart": {
+    "title": "Panier",
+    "empty": {
+      "message": "Vous n'avez encore rien ajouté, commençons !",
+      "startShopping": "Commencer mes achats",
+      "shopBestSellers": "Voir les meilleures ventes"
+    },
+    "summary": {
+      "orderSummary": "Récapitulatif de la commande",
+      "estimatedTotal": "Total estimé :",
+      "taxesDiscountsShipping": "Taxes, remises et {{link}} calculés au moment du paiement.",
+      "shipping": "frais de livraison",
+      "viewCart": "Voir le panier"
+    },
+    "actions": {
+      "addNote": "Ajouter une note",
+      "discountCode": "Ajouter un code promo",
+      "giftCard": "Utiliser une carte cadeau",
+      "checkout": "Passer au paiement",
+      "cancel": "Annuler",
+      "saveNote": "Enregistrer la note",
+      "apply": "Appliquer",
+      "redeem": "Utiliser"
+    },
+    "messages": {
+      "noteSaved": "Note enregistrée avec succès 🎉",
+      "discountApplied": "Remise appliquée avec succès 🎉",
+      "discountInvalid": "Code promo invalide.",
+      "giftCardApplied": "Carte cadeau appliquée avec succès 🎉",
+      "giftCardInvalid": "Code de carte cadeau invalide."
+    },
+    "placeholder": {
+      "note": "Ajoutez des instructions ou des remarques pour votre commande...",
+      "discountCode": "Code promo",
+      "giftCardCode": "Code de carte cadeau"
+    },
+    "bestSellers": "Plus de nos meilleures ventes"
+  },
+  "product": {
+    "addToCart": "Ajouter au panier",
+    "soldOut": "Épuisé",
+    "from": "À partir de",
+    "viewFullDetails": "Voir tous les détails →",
+    "quickShop": "Aperçu rapide",
+    "add": "Ajouter",
+    "remove": "Retirer",
+    "pictureOf": "Photo de {{name}}",
+    "secondPictureOf": "Deuxième photo de {{name}}"
+  },
+  "newsletter": {
+    "popup": {
+      "heading": "Restez informé !",
+      "description": "Abonnez-vous à notre newsletter et recevez des offres exclusives, les nouveautés et bien plus encore.",
+      "buttonText": "15 % de remise sur votre première commande",
+      "placeholder": "Saisissez votre e-mail"
+    }
+  },
+  "search": {
+    "title": "Recherche",
+    "placeholder": "Rechercher dans la boutique...",
+    "enterKeyword": "Saisissez un mot-clé",
+    "viewAllResults": "Voir tous les résultats",
+    "noResults": "Aucun résultat pour « {{term}} », essayez une autre recherche.",
+    "noResultsShort": "Aucun résultat trouvé pour",
+    "trendingProducts": "Produits tendance",
+    "problemLoadingProducts": "Impossible de charger les produits associés",
+    "popularKeywords": "lunettes de soleil, chapeaux, vestes, chaussures",
+    "popularSearches": "Recherches populaires :"
+  },
+  "footer": {
+    "bio": "<p>Nous sommes une équipe de designers, de développeurs et de créatifs passionnés par la création de produits beaux et fonctionnels.</p>",
+    "addressTitle": "NOTRE BOUTIQUE",
+    "storeAddress": "301 Front St W, Toronto, ON M5V 2T6, Canada",
+    "storeEmail": "contact@my-store.com",
+    "newsletterTitle": "RESTONS EN CONTACT",
+    "newsletterDescription": "Actualités et inspiration dans votre boîte mail, chaque semaine.",
+    "newsletterPlaceholder": "Veuillez saisir votre e-mail",
+    "newsletterButtonText": "Envoyer",
+    "copyright": "© 2024 Weaverse. Tous droits réservés.",
+    "email": "E-mail :",
+    "newsletterSuccess": "Merci pour votre inscription ! 🎉",
+    "newsletterError": "Une erreur s'est produite lors de l'inscription."
+  },
+  "announcement": {
+    "topbarText": "<p>Livraison offerte dès 50 $ d'achat</p><p>De nouveautés chaque semaine</p><p>Retours simplifiés sous 30 jours</p><p>Inscrivez-vous et obtenez 10 % sur votre première commande</p>"
+  },
+  "pagination": {
+    "loading": "Chargement...",
+    "loadPrevious": "↑ Charger les précédents",
+    "loadMore": "↓ Charger plus"
+  },
+  "accessibility": {
+    "closeCartDrawer": "Fermer le panier",
+    "close": "Fermer",
+    "removeGiftCard": "Retirer le code de carte cadeau {{code}}",
+    "removeDiscount": "Retirer le code promo {{code}}",
+    "predictiveSearch": "Recherche prédictive",
+    "quickShopModal": "Fenêtre d'aperçu rapide",
+    "skipToContent": "Aller au contenu"
+  },
+  "account": {
+    "signOut": "Se déconnecter",
+    "na": "N.D.",
+    "details": {
+      "title": "Compte",
+      "name": "Nom",
+      "phone": "Numéro de téléphone",
+      "email": "Adresse e-mail",
+      "editLink": "Modifier les informations du compte"
+    },
+    "orders": {
+      "title": "Commandes",
+      "empty": "Vous n'avez encore passé aucune commande.",
+      "orderImage": "Image de la commande",
+      "more": "de plus",
+      "orderId": "ID de commande",
+      "orderNo": "N° de commande",
+      "orderDate": "Date de commande",
+      "fulfillmentStatus": "Statut d'expédition",
+      "viewDetails": "Voir les détails",
+      "startShopping": "Commencer mes achats →",
+      "loading": "Chargement...",
+      "loadPrevious": "Charger les précédentes",
+      "loadMore": "Charger plus",
+      "viewOrder": "Voir la commande →"
+    },
+    "address": {
+      "title": "Carnet d'adresses",
+      "empty": "Vous n'avez enregistré aucune adresse.",
+      "add": "Ajouter une adresse",
+      "default": "Par défaut",
+      "edit": "Modifier",
+      "remove": "Supprimer"
+    },
+    "edit": {
+      "title": "Modifier le compte",
+      "firstName": "Prénom",
+      "lastName": "Nom",
+      "cancel": "Annuler",
+      "save": "Enregistrer",
+      "saving": "Enregistrement"
+    },
+    "addressForm": {
+      "titleAdd": "Ajouter une nouvelle adresse",
+      "titleEdit": "Modifier l'adresse",
+      "company": "Entreprise",
+      "address1": "Adresse ligne 1",
+      "address1Required": "Adresse ligne 1*",
+      "address2": "Adresse ligne 2",
+      "city": "Ville",
+      "state": "État / Province",
+      "statePlaceholder": "État / Province (zoneCode)",
+      "zip": "Code postal",
+      "country": "Pays",
+      "countryPlaceholder": "Code pays (territoire)",
+      "phone": "Téléphone",
+      "setDefault": "Définir comme adresse par défaut"
+    }
+  },
+  "collection": {
+    "productsCount": "{{count}} produits",
+    "filter": "Filtrer",
+    "filters": "Filtres",
+    "closeFilters": "Fermer le panneau de filtres",
+    "sortBy": "Trier par :",
+    "sort": "Trier",
+    "sortOptions": {
+      "featured": "En vedette",
+      "relevance": "Pertinence",
+      "priceLowHigh": "Prix (croissant)",
+      "priceHighLow": "Prix (décroissant)",
+      "bestSelling": "Meilleures ventes",
+      "newest": "Nouveautés"
+    },
+    "clearAllFilters": "Effacer tous les filtres",
+    "clearAllFiltersAriaLabel": "Effacer tous les filtres appliqués",
+    "noProductsMatchedFilters": "Aucun produit ne correspond à vos filtres.",
+    "priceRange": {
+      "minPrice": "Prix minimum",
+      "maxPrice": "Prix maximum",
+      "to": "à"
+    }
+  },
+  "productDetails": {
+    "description": "Description",
+    "shipping": "Livraison",
+    "returns": "Retours",
+    "learnMore": "En savoir plus"
+  },
+  "review": {
+    "writeYourReview": "Rédiger votre avis",
+    "shareExperience": "Partagez votre expérience avec les autres clients",
+    "rating": "Note",
+    "yourName": "Votre nom",
+    "enterName": "Saisissez votre nom",
+    "emailAddress": "Adresse e-mail",
+    "enterEmail": "Saisissez votre e-mail",
+    "reviewTitle": "Titre de l'avis",
+    "giveTitle": "Donnez un titre à votre avis",
+    "yourReview": "Votre avis",
+    "shareExperienceProduct": "Partagez votre expérience avec ce produit",
+    "cancel": "Annuler",
+    "submit": "Envoyer l'avis",
+    "submitting": "Envoi en cours...",
+    "selectRating": "Veuillez sélectionner une note",
+    "successTitle": "Avis envoyé avec succès !",
+    "successMessage": "Merci pour votre retour. Votre avis est en cours de traitement et sera publié dans quelques minutes.",
+    "writeAnother": "Rédiger un autre avis",
+    "errorTitle": "Échec de l'envoi",
+    "errorMessage": "Une erreur s'est produite lors de l'envoi de votre avis. Veuillez réessayer.",
+    "tryAgain": "Réessayer",
+    "imageAlt": "Image de l'avis {{index}}",
+    "imageView": "Voir",
+    "imageGalleryAriaLabel": "Galerie d'images de l'avis",
+    "closeImageAriaLabel": "Fermer l'image",
+    "previousImageAriaLabel": "Image précédente",
+    "nextImageAriaLabel": "Image suivante",
+    "reviewImageAlt": "Image de l'avis"
+  }
+}

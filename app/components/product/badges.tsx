@@ -1,6 +1,6 @@
 import { useMoney } from "@shopify/hydrogen";
 import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";
-import { useThemeSettings } from "@weaverse/hydrogen";
+import { useThemeSettings, useTranslation } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { colord } from "colord";
 import type {
@@ -45,22 +45,21 @@ function Badge({
 export function NewBadge({
   publishedAt,
   badgeStyle,
-  newBadgeText,
   newBadgeColor,
   newBadgeDaysOld,
   className,
 }: {
   publishedAt: string;
   badgeStyle: BadgeStyleSettings;
-  newBadgeText: string;
   newBadgeColor: string;
   newBadgeDaysOld: number;
   className?: string;
 }) {
+  const { t } = useTranslation();
   if (isNewArrival(publishedAt, newBadgeDaysOld)) {
     return (
       <Badge
-        text={newBadgeText}
+        text={t("badge.new")}
         backgroundColor={newBadgeColor}
         badgeStyle={badgeStyle}
         className={clsx("new-badge", className)}
@@ -72,18 +71,17 @@ export function NewBadge({
 
 export function BestSellerBadge({
   badgeStyle,
-  bestSellerBadgeText,
   bestSellerBadgeColor,
   className,
 }: {
   badgeStyle: BadgeStyleSettings;
-  bestSellerBadgeText: string;
   bestSellerBadgeColor: string;
   className?: string;
 }) {
+  const { t } = useTranslation();
   return (
     <Badge
-      text={bestSellerBadgeText}
+      text={t("badge.bestSeller")}
       backgroundColor={bestSellerBadgeColor}
       badgeStyle={badgeStyle}
       className={clsx("best-seller-badge", className)}
@@ -93,18 +91,17 @@ export function BestSellerBadge({
 
 export function SoldOutBadge({
   badgeStyle,
-  soldOutBadgeText,
   soldOutBadgeColor,
   className,
 }: {
   badgeStyle: BadgeStyleSettings;
-  soldOutBadgeText: string;
   soldOutBadgeColor: string;
   className?: string;
 }) {
+  const { t } = useTranslation();
   return (
     <Badge
-      text={soldOutBadgeText}
+      text={t("badge.soldOut")}
       backgroundColor={soldOutBadgeColor}
       badgeStyle={badgeStyle}
       className={clsx("sold-out-badge", className)}
@@ -114,18 +111,17 @@ export function SoldOutBadge({
 
 export function BundleBadge({
   badgeStyle,
-  bundleBadgeText,
   bundleBadgeColor,
   className,
 }: {
   badgeStyle: BadgeStyleSettings;
-  bundleBadgeText: string;
   bundleBadgeColor: string;
   className?: string;
 }) {
+  const { t } = useTranslation();
   return (
     <Badge
-      text={bundleBadgeText}
+      text={t("badge.bundle")}
       backgroundColor={bundleBadgeColor}
       badgeStyle={badgeStyle}
       className={clsx("bundle-badge", className)}
@@ -137,20 +133,19 @@ export function SaleBadge({
   price,
   compareAtPrice,
   badgeStyle,
-  saleBadgeText = "Sale",
   saleBadgeColor,
   className,
 }: {
   price: MoneyV2;
   compareAtPrice: MoneyV2;
   badgeStyle: BadgeStyleSettings;
-  saleBadgeText?: string;
   saleBadgeColor: string;
   className?: string;
 }) {
+  const { t } = useTranslation();
   let { amount, percentage } = calculateDiscount(price, compareAtPrice);
   let discountAmount = useMoney({ amount, currencyCode: price.currencyCode });
-  let text = saleBadgeText
+  let text = t("badge.sale")
     .replace("[amount]", discountAmount.withoutTrailingZeros)
     .replace("[percentage]", percentage);
 
@@ -205,16 +200,11 @@ export function ProductBadges({
     colorText,
     colorTextInverse,
     badgeTextTransform,
-    newBadgeText,
     newBadgeColor,
     newBadgeDaysOld,
-    bestSellerBadgeText,
     bestSellerBadgeColor,
-    soldOutBadgeText,
     soldOutBadgeColor,
-    bundleBadgeText,
     bundleBadgeColor,
-    saleBadgeText,
     saleBadgeColor,
   } = useThemeSettings<ThemeSettings>();
 
@@ -251,7 +241,6 @@ export function ProductBadges({
           {isBundle && (
             <BundleBadge
               badgeStyle={badgeStyle}
-              bundleBadgeText={bundleBadgeText}
               bundleBadgeColor={bundleBadgeColor}
             />
           )}
@@ -259,20 +248,17 @@ export function ProductBadges({
             price={selectedVariant.price as MoneyV2}
             compareAtPrice={selectedVariant.compareAtPrice as MoneyV2}
             badgeStyle={badgeStyle}
-            saleBadgeText={saleBadgeText}
             saleBadgeColor={saleBadgeColor}
           />
           <NewBadge
             publishedAt={publishedAt}
             badgeStyle={badgeStyle}
-            newBadgeText={newBadgeText}
             newBadgeColor={newBadgeColor}
             newBadgeDaysOld={newBadgeDaysOld}
           />
           {isBestSellerProduct && (
             <BestSellerBadge
               badgeStyle={badgeStyle}
-              bestSellerBadgeText={bestSellerBadgeText}
               bestSellerBadgeColor={bestSellerBadgeColor}
             />
           )}
@@ -280,7 +266,6 @@ export function ProductBadges({
       ) : (
         <SoldOutBadge
           badgeStyle={badgeStyle}
-          soldOutBadgeText={soldOutBadgeText}
           soldOutBadgeColor={soldOutBadgeColor}
         />
       )}
